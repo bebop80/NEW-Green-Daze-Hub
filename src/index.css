@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-brand-green: #00a844;
+  --color-brand-dark: #f8fafc;
+  --color-brand-card: #ffffff;
+  --color-brand-border: #94a3b8;
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  color-scheme: light;
+}
+
+.dark {
+  --color-brand-green: #00e660;
+  --color-brand-dark: #121620;
+  --color-brand-card: #1e2433;
+  --color-brand-border: #4a5872;
+  --text-primary: #f8fafc;
+  --text-secondary: #94a3b8;
+  color-scheme: dark;
+}
+
+@layer base {
+  body {
+    @apply bg-brand-dark text-[var(--text-primary)] font-sans antialiased transition-colors duration-300;
+  }
+
+  /* Form input & select standard styling with guaranteed contrast in dark and light modes */
+  input[type="date"],
+  input[type="time"],
+  input[type="text"],
+  input[type="number"],
+  select,
+  textarea {
+    @apply bg-brand-dark text-text-primary border border-brand-border;
+  }
+
+  .dark input[type="date"],
+  .dark input[type="time"],
+  .dark input[type="text"],
+  .dark input[type="number"],
+  .dark select,
+  .dark textarea {
+    background-color: #121620 !important;
+    color: #f8fafc !important;
+  }
+
+  /* Dropdown options color in dark mode */
+  .dark select option {
+    background-color: #1e2433 !important;
+    color: #f8fafc !important;
+  }
+
+  select option {
+    background-color: #ffffff;
+    color: #0f172a;
+  }
+
+  /* Ensure native date and time picker icons adapt to dark / light modes and match text color */
+  .dark input[type="date"]::-webkit-calendar-picker-indicator,
+  .dark input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(2);
+    opacity: 1;
+    cursor: pointer;
+  }
+
+  input[type="date"]::-webkit-calendar-picker-indicator,
+  input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: brightness(0);
+    opacity: 0.85;
+    cursor: pointer;
+  }
+
+  /* For custom-picker-input: make native indicator transparent but full-click on right area */
+  .custom-picker-input::-webkit-calendar-picker-indicator {
+    opacity: 0 !important;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 2.5rem;
+    height: 100%;
+    cursor: pointer;
+    z-index: 10;
+  }
+}
+
+@layer components {
+  .glass-card {
+    @apply bg-brand-card border border-brand-border rounded-2xl shadow-xl transition-colors duration-300;
+  }
+
+  .glow-green {
+    text-shadow: 0 0 12px rgba(0, 230, 96, 0.6);
+  }
+
+  .glow-border {
+    box-shadow: 0 0 16px rgba(0, 230, 96, 0.25);
+  }
+}

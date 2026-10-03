@@ -1,0 +1,34 @@
+{
+  "entities": {
+    "MemberAvailability": {
+      "title": "Member Availability",
+      "description": "Availability calendar dates for a band member",
+      "type": "object",
+      "properties": {
+        "memberId": {
+          "type": "string",
+          "description": "Normalized member identifier"
+        },
+        "memberName": {
+          "type": "string",
+          "description": "Band member display name"
+        },
+        "dates": {
+          "type": "object",
+          "description": "Map of YYYY-MM-DD date strings to boolean availability"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update"
+        }
+      },
+      "required": ["memberId", "memberName", "dates", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/member_availability/{memberId}": {
+      "schema": "MemberAvailability",
+      "description": "Stores individual member availability dates"
+    }
+  }
+}
