@@ -110,19 +110,19 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
         </div>
 
         {/* Body Fields */}
-        <div className="flex-1 flex flex-col justify-center py-2 relative z-10 space-y-3.5">
+        <div className="flex-1 min-h-0 flex flex-col justify-evenly py-1 sm:py-2 relative z-10 space-y-2 sm:space-y-3">
           {/* Box Chi Tocca Pagare */}
-          <div className="p-3.5 rounded-2xl bg-white/90 dark:bg-[#121620]/80 backdrop-blur-md border border-slate-300 dark:border-white/[0.1] shadow-md flex flex-col items-center justify-center text-center gap-1">
+          <div className="p-2.5 sm:p-3.5 rounded-2xl bg-white/90 dark:bg-[#121620]/80 backdrop-blur-md border border-slate-300 dark:border-white/[0.1] shadow-md flex flex-col items-center justify-center text-center gap-0.5 sm:gap-1">
             <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold block text-center">
               Tocca Pagare A
             </span>
             <div className="flex items-center justify-center gap-2 mt-0.5 text-center">
               <div 
-                className="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm"
+                className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full shrink-0 shadow-sm"
                 style={{ backgroundColor: systemPayerColor }}
               />
               <span 
-                className="font-rock text-2xl sm:text-3xl uppercase tracking-wider leading-none truncate drop-shadow-sm text-center"
+                className="font-rock text-xl sm:text-2xl uppercase tracking-wider leading-none truncate drop-shadow-sm text-center"
                 style={{ color: systemPayerColor }}
               >
                 {systemPayerName || '--'}
@@ -132,7 +132,7 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
 
           {/* Menù a tendina per cambiare chi paga */}
           <div>
-            <label className="text-[10px] font-mono uppercase text-slate-700 dark:text-zinc-300 font-bold block mb-1.5 drop-shadow-xs">
+            <label className="text-[10px] font-mono uppercase text-slate-700 dark:text-zinc-300 font-bold block mb-1 drop-shadow-xs">
               Chi paga
             </label>
 
@@ -141,7 +141,7 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
                 value={selectedPayer}
                 onChange={(e) => setSelectedPayer(e.target.value)}
                 style={{ color: activePayerColor }}
-                className="w-full h-11 px-3.5 pr-10 rounded-xl bg-white/95 dark:bg-[#121620]/85 backdrop-blur-md border border-slate-300 dark:border-white/[0.12] text-base font-rock uppercase tracking-wider outline-none focus:border-emerald-600 dark:focus:border-brand-green appearance-none cursor-pointer shadow-xs"
+                className="w-full h-10 sm:h-11 px-3 sm:px-3.5 pr-10 rounded-xl bg-white/95 dark:bg-[#121620]/85 backdrop-blur-md border border-slate-300 dark:border-white/[0.12] text-sm sm:text-base font-rock uppercase tracking-wider outline-none focus:border-emerald-600 dark:focus:border-brand-green appearance-none cursor-pointer shadow-xs"
               >
                 <option value="" className="bg-white dark:bg-[#121620] text-slate-400 dark:text-zinc-400">
                   Seleziona pagatore...
@@ -168,7 +168,7 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
 
           {/* Data Sessione */}
           <div>
-            <label className="text-[10px] font-mono uppercase text-slate-700 dark:text-zinc-300 font-bold block mb-1.5 drop-shadow-xs">
+            <label className="text-[10px] font-mono uppercase text-slate-700 dark:text-zinc-300 font-bold block mb-1 drop-shadow-xs">
               Data Sessione
             </label>
 
@@ -177,7 +177,7 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
                 type="date"
                 value={paymentDate}
                 onChange={(e) => setPaymentDate(e.target.value)}
-                className="w-full h-11 px-3.5 pr-10 rounded-xl bg-white/95 dark:bg-[#121620]/85 backdrop-blur-md border border-slate-300 dark:border-white/[0.12] text-sm font-mono font-bold text-slate-900 dark:text-white outline-none focus:border-emerald-600 dark:focus:border-brand-green [color-scheme:light] dark:[color-scheme:dark] shadow-xs cursor-pointer custom-picker-input"
+                className="w-full h-10 sm:h-11 px-3 sm:px-3.5 pr-10 rounded-xl bg-white/95 dark:bg-[#121620]/85 backdrop-blur-md border border-slate-300 dark:border-white/[0.12] text-xs sm:text-sm font-mono font-bold text-slate-900 dark:text-white outline-none focus:border-emerald-600 dark:focus:border-brand-green [color-scheme:light] dark:[color-scheme:dark] shadow-xs cursor-pointer custom-picker-input"
               />
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-emerald-600 dark:text-brand-green flex items-center justify-center">
                 <Calendar size={18} className="text-emerald-600 dark:text-brand-green drop-shadow-xs dark:drop-shadow-[0_0_8px_#00e660]" />
@@ -189,7 +189,7 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
           <button
             onClick={onRegisterPayment}
             disabled={isSubmitting || !selectedPayer || !paymentDate}
-            className={`w-full py-3.5 rounded-2xl font-rock text-base uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg ${
+            className={`w-full py-2.5 sm:py-3.5 rounded-xl sm:rounded-2xl font-rock text-sm sm:text-base uppercase tracking-wider flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg shrink-0 ${
               isSubmitting || !selectedPayer || !paymentDate
                 ? 'bg-slate-200 dark:bg-white/[0.04] text-slate-400 dark:text-zinc-500 border border-slate-300 dark:border-white/[0.06] cursor-not-allowed'
                 : 'bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-brand-green dark:hover:bg-brand-green/90 dark:text-black shadow-emerald-700/20 dark:shadow-brand-green/20 active:scale-[0.98]'
@@ -201,53 +201,48 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
         </div>
       </div>
 
-      {/* 2. SEGNAPOSTO STATISTICHE SPESE: CLICK APRE POPUP GRAFICO */}
-      <div 
-        onClick={() => setShowAnalyticsModal(true)}
-        className="flex-shrink-0 rounded-2xl p-3.5 bg-white dark:bg-gradient-to-r dark:from-[#181d29] dark:to-[#12151e] border border-slate-200 dark:border-white/[0.06] hover:border-emerald-600/40 dark:hover:border-brand-green/40 shadow-sm dark:shadow-xl flex items-center justify-between gap-2 cursor-pointer group transition-all"
-      >
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-emerald-600 dark:text-brand-green shrink-0 group-hover:scale-105 transition-transform shadow-xs">
-            <BarChart3 size={18} />
+      {/* 2. ROW CON 2 CARD AFFIANCATE: STATISTICHE SPESE & STORICO PAGAMENTI */}
+      <div className="grid grid-cols-2 gap-2 flex-shrink-0">
+        {/* Card Statistiche Spese */}
+        <div 
+          onClick={() => setShowAnalyticsModal(true)}
+          className="rounded-2xl p-2.5 sm:p-3 bg-white dark:bg-gradient-to-br dark:from-[#181d29] dark:to-[#12151e] border border-slate-200 dark:border-white/[0.06] hover:border-emerald-600/40 dark:hover:border-brand-green/40 shadow-sm dark:shadow-md flex items-center justify-between gap-1.5 cursor-pointer group transition-all"
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-emerald-600 dark:text-brand-green shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+              <BarChart3 size={16} />
+            </div>
+            <div className="min-w-0">
+              <span className="font-rock text-xs sm:text-sm tracking-wider uppercase text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-brand-green transition-colors block truncate leading-tight">
+                STATISTICHE
+              </span>
+              <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate font-mono">
+                {totalPayments} prove
+              </p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <span className="font-rock text-sm sm:text-base tracking-wider uppercase text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-brand-green transition-colors block leading-tight">
-              STATISTICHE SPESE
-            </span>
-            <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
-              {totalPayments} prove
-            </p>
-          </div>
+          <ArrowUpRight size={14} className="text-emerald-700 dark:text-brand-green shrink-0" />
         </div>
 
-        <div className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:bg-white/[0.05] dark:border-white/[0.08] text-xs font-rock uppercase tracking-wider text-emerald-700 dark:text-brand-green group-hover:bg-emerald-600 group-hover:text-white dark:group-hover:bg-brand-green dark:group-hover:text-black transition-all shrink-0 shadow-xs">
-          <span>Grafico</span>
-          <ArrowUpRight size={13} />
-        </div>
-      </div>
-
-      {/* 3. SEGNAPOSTO STORICO PAGAMENTI: CLICK APRE POPUP STORICO + ELIMINA ULTIMO */}
-      <div 
-        onClick={() => setShowHistoryModal(true)}
-        className="flex-shrink-0 rounded-2xl p-3.5 bg-white dark:bg-gradient-to-r dark:from-[#181d29] dark:to-[#12151e] border border-slate-200 dark:border-white/[0.06] hover:border-emerald-600/40 dark:hover:border-brand-green/40 shadow-sm dark:shadow-xl flex items-center justify-between gap-2 cursor-pointer group transition-all"
-      >
-        <div className="flex items-center gap-2.5 min-w-0">
-          <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-emerald-600 dark:text-brand-green shrink-0 group-hover:scale-105 transition-transform shadow-xs">
-            <History size={18} />
+        {/* Card Storico Pagamenti */}
+        <div 
+          onClick={() => setShowHistoryModal(true)}
+          className="rounded-2xl p-2.5 sm:p-3 bg-white dark:bg-gradient-to-br dark:from-[#181d29] dark:to-[#12151e] border border-slate-200 dark:border-white/[0.06] hover:border-emerald-600/40 dark:hover:border-brand-green/40 shadow-sm dark:shadow-md flex items-center justify-between gap-1.5 cursor-pointer group transition-all"
+        >
+          <div className="flex items-center gap-2 min-w-0">
+            <div className="w-8 h-8 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-emerald-600 dark:text-brand-green shrink-0 group-hover:scale-105 transition-transform shadow-xs">
+              <History size={16} />
+            </div>
+            <div className="min-w-0">
+              <span className="font-rock text-xs sm:text-sm tracking-wider uppercase text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-brand-green transition-colors block truncate leading-tight">
+                STORICO
+              </span>
+              <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate font-mono">
+                {totalPayments} registrati
+              </p>
+            </div>
           </div>
-          <div className="min-w-0">
-            <span className="font-rock text-sm sm:text-base tracking-wider uppercase text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-brand-green transition-colors block leading-tight">
-              STORICO PAGAMENTI
-            </span>
-            <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
-              {totalPayments} pagamenti registrati
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-1 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:bg-white/[0.05] dark:border-white/[0.08] text-xs font-rock uppercase tracking-wider text-emerald-700 dark:text-brand-green group-hover:bg-emerald-600 group-hover:text-white dark:group-hover:bg-brand-green dark:group-hover:text-black transition-all shrink-0 shadow-xs">
-          <span>Archivio</span>
-          <ArrowUpRight size={13} />
+          <ArrowUpRight size={14} className="text-emerald-700 dark:text-brand-green shrink-0" />
         </div>
       </div>
 

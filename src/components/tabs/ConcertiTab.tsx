@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
 import { 
   Ticket, 
   Calendar, 
@@ -38,6 +39,7 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
   shareInfo
 }) => {
   const [activeSlide, setActiveSlide] = useState(0);
+  const [slideDirection, setSlideDirection] = useState<number>(1);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [calendarItem, setCalendarItem] = useState<CalendarEventItem | null>(null);
@@ -61,14 +63,89 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
 
   const handleNextSlide = () => {
     if (totalUpcoming > 1) {
+      setSlideDirection(1);
       setActiveSlide(prev => (prev + 1) % totalUpcoming);
     }
   };
 
   const handlePrevSlide = () => {
     if (totalUpcoming > 1) {
+      setSlideDirection(-1);
       setActiveSlide(prev => (prev - 1 + totalUpcoming) % totalUpcoming);
     }
+  };
+
+  // Swipe Gesture Handling for Mobile / Tablet / Mouse Drag
+  const touchStartX = useRef<number | null>(null);
+  const touchStartY = useRef<number | null>(null);
+  const touchEndX = useRef<number | null>(null);
+  const touchEndY = useRef<number | null>(null);
+  const isMouseDown = useRef(false);
+  const minSwipeDistance = 35;
+
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    touchEndX.current = null;
+    touchEndY.current = null;
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    touchEndX.current = e.touches[0].clientX;
+    touchEndY.current = e.touches[0].clientY;
+  };
+
+  const handleTouchEnd = () => {
+    if (touchStartX.current === null || touchEndX.current === null) return;
+    const diffX = touchStartX.current - touchEndX.current;
+    const diffY = (touchStartY.current || 0) - (touchEndY.current || 0);
+
+    // Dominant horizontal swipe
+    if (Math.abs(diffX) > minSwipeDistance && Math.abs(diffX) > Math.abs(diffY)) {
+      if (diffX > 0) {
+        handleNextSlide();
+      } else {
+        handlePrevSlide();
+      }
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+    touchEndX.current = null;
+    touchEndY.current = null;
+  };
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    isMouseDown.current = true;
+    touchStartX.current = e.clientX;
+    touchStartY.current = e.clientY;
+    touchEndX.current = null;
+    touchEndY.current = null;
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isMouseDown.current) return;
+    touchEndX.current = e.clientX;
+    touchEndY.current = e.clientY;
+  };
+
+  const handleMouseUp = () => {
+    if (!isMouseDown.current) return;
+    isMouseDown.current = false;
+    if (touchStartX.current !== null && touchEndX.current !== null) {
+      const diffX = touchStartX.current - touchEndX.current;
+      const diffY = (touchStartY.current || 0) - (touchEndY.current || 0);
+      if (Math.abs(diffX) > minSwipeDistance && Math.abs(diffX) > Math.abs(diffY)) {
+        if (diffX > 0) {
+          handleNextSlide();
+        } else {
+          handlePrevSlide();
+        }
+      }
+    }
+    touchStartX.current = null;
+    touchStartY.current = null;
+    touchEndX.current = null;
+    touchEndY.current = null;
   };
 
   const handleDelete = async (id: string) => {
@@ -152,8 +229,17 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
               </div>
             )}
 
-            {/* Concert Details con foto di sfondo */}
-            <div className="relative -mx-4 sm:-mx-5 mt-1.5 px-4 sm:px-5 py-4 flex-1 flex flex-col justify-center items-center text-center overflow-hidden border-b border-slate-200 dark:border-white/[0.1] shadow-inner">
+            {/* Concert Details con foto di sfondo e swipe touch/mouse */}
+            <div 
+              onTouchStart={handleTouchStart}
+              onTouchMove={handleTouchMove}
+              onTouchEnd={handleTouchEnd}
+              onMouseDown={handleMouseDown}
+              onMouseMove={handleMouseMove}
+              onMouseUp={handleMouseUp}
+              onMouseLeave={handleMouseUp}
+              className="relative -mx-4 sm:-mx-5 mt-1.5 px-4 sm:px-5 py-4 flex-1 flex flex-col justify-center items-center text-center overflow-hidden border-b border-slate-200 dark:border-white/[0.1] shadow-inner select-none cursor-grab active:cursor-grabbing touch-pan-y"
+            >
               {/* Foto dello Sfondo Concerto */}
               <img 
                 src={concertBg} 
@@ -168,45 +254,54 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
               <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/75 pointer-events-none" />
               <div className="absolute inset-0 bg-radial from-transparent via-black/35 to-black/75 pointer-events-none" />
 
-              <div className="relative z-10 space-y-1.5 max-w-full">
-                <h3 
-                  className="font-rock text-white uppercase tracking-wide leading-tight break-words drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
-                  style={{ fontSize: '45px' }}
+              <AnimatePresence mode="wait">
+                <motion.div 
+                  key={currentConcert.id}
+                  initial={{ opacity: 0, x: slideDirection > 0 ? 35 : -35 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: slideDirection > 0 ? -35 : 35 }}
+                  transition={{ duration: 0.16, ease: "easeOut" }}
+                  className="relative z-10 space-y-1.5 max-w-full pointer-events-none flex flex-col items-center justify-center text-center"
                 >
-                  {currentConcert.name}
-                </h3>
+                  <h3 
+                    className="font-rock text-white uppercase tracking-wide leading-tight break-words drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
+                    style={{ fontSize: '45px' }}
+                  >
+                    {currentConcert.name}
+                  </h3>
 
-                <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-mono font-bold text-emerald-400 dark:text-brand-green drop-shadow-md">
-                  <Calendar size={13} style={{ backgroundColor: '#000000' }} />
-                  <span style={{ fontSize: '16px', color: '#ffffff' }}>
-                    {format(safeParseLocal(currentConcert.date), 'EEEE d MMMM yyyy', { locale: it })}
-                  </span>
-                  {currentConcert.time && <span>• Ore {currentConcert.time}</span>}
-                </div>
-
-                {currentConcert.address && (
-                  <div className="flex items-center justify-center gap-1 text-xs text-zinc-300 mt-0.5 truncate drop-shadow-sm">
-                    <MapPin size={12} className="text-emerald-400 dark:text-brand-green shrink-0" />
-                    <span className="truncate" style={{ fontSize: '14px' }}>
-                      {currentConcert.address}
+                  <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-mono font-bold text-emerald-400 dark:text-brand-green drop-shadow-md">
+                    <Calendar size={13} style={{ backgroundColor: '#000000' }} />
+                    <span style={{ fontSize: '16px', color: '#ffffff' }}>
+                      {format(safeParseLocal(currentConcert.date), 'EEEE d MMMM yyyy', { locale: it })}
                     </span>
+                    {currentConcert.time && <span>• Ore {currentConcert.time}</span>}
                   </div>
-                )}
 
-                {/* Extra badges: Soundcheck & Cachet */}
-                <div className="flex items-center justify-center gap-2 mt-2 flex-wrap">
-                  {currentConcert.soundcheck && (
-                    <span className="px-2.5 py-0.5 rounded-md bg-black/60 backdrop-blur-xs border border-white/[0.12] text-xs font-mono text-zinc-200 shadow-xs">
-                      Soundcheck: {currentConcert.soundcheck}
-                    </span>
+                  {currentConcert.address && (
+                    <div className="flex items-center justify-center gap-1 text-xs text-zinc-300 mt-0.5 truncate drop-shadow-sm">
+                      <MapPin size={12} className="text-emerald-400 dark:text-brand-green shrink-0" />
+                      <span className="truncate" style={{ fontSize: '14px' }}>
+                        {currentConcert.address}
+                      </span>
+                    </div>
                   )}
-                  {currentConcert.cachet && (
-                    <span className="px-2.5 py-0.5 rounded-md bg-emerald-600 text-white dark:bg-brand-green dark:text-black border border-emerald-400/40 dark:border-brand-green/40 text-xs font-mono font-bold shadow-md shadow-emerald-900/20 dark:shadow-brand-green/20">
-                      Cachet: {currentConcert.cachet}
-                    </span>
-                  )}
-                </div>
-              </div>
+
+                  {/* Extra badges: Soundcheck & Cachet */}
+                  <div className="flex items-center justify-center gap-2 mt-2 flex-wrap">
+                    {currentConcert.soundcheck && (
+                      <span className="px-2.5 py-0.5 rounded-md bg-black/60 backdrop-blur-xs border border-white/[0.12] text-xs font-mono text-zinc-200 shadow-xs">
+                        Soundcheck: {currentConcert.soundcheck}
+                      </span>
+                    )}
+                    {currentConcert.cachet && (
+                      <span className="px-2.5 py-0.5 rounded-md bg-emerald-600 text-white dark:bg-brand-green dark:text-black border border-emerald-400/40 dark:border-brand-green/40 text-xs font-mono font-bold shadow-md shadow-emerald-900/20 dark:shadow-brand-green/20">
+                        Cachet: {currentConcert.cachet}
+                      </span>
+                    )}
+                  </div>
+                </motion.div>
+              </AnimatePresence>
             </div>
 
             {/* Actions Row */}

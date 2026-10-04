@@ -32,7 +32,7 @@ export const AppHeader: React.FC<AppHeaderProps> = ({
 
         {/* Center: Band name centered, strictly on ONE single line */}
         <div className="flex-1 flex items-center justify-center min-w-0 px-1 text-center">
-          <span className="whitespace-nowrap font-['Verdana'] font-bold not-italic text-2xl sm:text-3xl tracking-wider text-emerald-700 dark:text-brand-green dark:glow-green uppercase select-none leading-none drop-shadow-xs dark:drop-shadow-none">
+          <span className="whitespace-nowrap font-['Verdana'] font-bold not-italic text-[30px] no-underline tracking-wider text-emerald-700 dark:text-brand-green dark:glow-green uppercase select-none leading-none drop-shadow-xs dark:drop-shadow-none">
             GREEN DAZE
           </span>
         </div>

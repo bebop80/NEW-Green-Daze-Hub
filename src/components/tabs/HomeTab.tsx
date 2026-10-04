@@ -70,7 +70,10 @@ export const HomeTab: React.FC<HomeTabProps> = ({
         <div className="flex items-center justify-between gap-2 relative z-20 flex-shrink-0 pb-1">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-brand-green shadow-xs dark:shadow-[0_0_8px_#00e660]" />
-            <span className="text-[11px] font-mono tracking-widest text-emerald-700 dark:text-brand-green font-bold uppercase">
+            <span 
+              className="font-mono tracking-widest text-emerald-700 dark:text-brand-green font-bold uppercase text-[15px]"
+              style={{ fontSize: '15px' }}
+            >
               PROSSIMA PROVA
             </span>
           </div>
