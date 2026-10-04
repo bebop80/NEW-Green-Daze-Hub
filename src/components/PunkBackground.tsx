@@ -30,12 +30,12 @@ export const PunkBackground: React.FC<PunkBackgroundProps> = () => {
         src={punkBgImage}
         alt="Green Daze Punk Atmosphere"
         referrerPolicy="no-referrer"
-        className="w-full h-full object-cover object-center opacity-[0.32] sm:opacity-[0.40] dark:opacity-[0.45] dark:sm:opacity-[0.58] filter contrast-125 brightness-95 dark:brightness-105 grayscale-[10%] dark:grayscale-0 mix-blend-multiply dark:mix-blend-lighten"
+        className="w-full h-full object-cover object-center opacity-[0.22] sm:opacity-[0.28] dark:opacity-[0.45] dark:sm:opacity-[0.58] filter contrast-125 brightness-100 dark:brightness-105 grayscale-[10%] dark:grayscale-0 mix-blend-multiply dark:mix-blend-lighten"
       />
 
       {/* Gentle vignette overlay to preserve full edge-to-edge art without dark side bars */}
       <div 
-        className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_20%,_rgba(244,244,245,0.4)_100%)] dark:bg-[radial-gradient(circle_at_center,_transparent_20%,_rgba(18,21,28,0.45)_100%)] pointer-events-none" 
+        className="absolute inset-0 bg-[radial-gradient(circle_at_center,_transparent_20%,_rgba(241,245,249,0.65)_100%)] dark:bg-[radial-gradient(circle_at_center,_transparent_20%,_rgba(18,21,28,0.45)_100%)] pointer-events-none" 
       />
 
       {/* Subtle green ambient light glow in corners */}

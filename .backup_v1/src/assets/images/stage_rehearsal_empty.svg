@@ -1,0 +1,301 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560">
+  <defs>
+    <!-- Background stage dark gradient -->
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#050a07" />
+      <stop offset="45%" stop-color="#0a1710" />
+      <stop offset="75%" stop-color="#0d1f15" />
+      <stop offset="100%" stop-color="#060c08" />
+    </linearGradient>
+
+    <!-- Stage floor perspective gradient -->
+    <linearGradient id="floorGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#08140c" />
+      <stop offset="35%" stop-color="#0b1e12" />
+      <stop offset="70%" stop-color="#07130b" />
+      <stop offset="100%" stop-color="#030805" />
+    </linearGradient>
+
+    <!-- Overhead Spotlight Cone Gradients -->
+    <linearGradient id="coneGrad1" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#00ff66" stop-opacity="0.8" />
+      <stop offset="30%" stop-color="#00cc52" stop-opacity="0.4" />
+      <stop offset="75%" stop-color="#008033" stop-opacity="0.15" />
+      <stop offset="100%" stop-color="#004d1f" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="coneGrad2" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#33ff85" stop-opacity="0.7" />
+      <stop offset="40%" stop-color="#00e65c" stop-opacity="0.3" />
+      <stop offset="85%" stop-color="#00993d" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#003314" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Radial Floor Light Pools -->
+    <radialGradient id="floorPool" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#00ff66" stop-opacity="0.3" />
+      <stop offset="50%" stop-color="#00cc52" stop-opacity="0.15" />
+      <stop offset="80%" stop-color="#006629" stop-opacity="0.05" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Metallic Cymbal Gradient -->
+    <radialGradient id="cymbalGrad" cx="45%" cy="45%" r="50%">
+      <stop offset="0%" stop-color="#ffe680" />
+      <stop offset="40%" stop-color="#d4af37" />
+      <stop offset="80%" stop-color="#8c7320" />
+      <stop offset="100%" stop-color="#40330a" />
+    </radialGradient>
+
+    <!-- Amplifier Grill Pattern -->
+    <pattern id="ampGrill" width="4" height="4" patternUnits="userSpaceOnUse">
+      <rect width="4" height="4" fill="#121212" />
+      <circle cx="2" cy="2" r="0.8" fill="#1f2923" />
+    </pattern>
+  </defs>
+
+  <!-- Dark Stage Background -->
+  <rect width="1000" height="560" fill="url(#bgGrad)" />
+
+  <!-- Stage Trusses (Vertical side columns) -->
+  <g stroke="#1a2e22" stroke-width="1.5" opacity="0.6">
+    <!-- Left Truss Upright -->
+    <line x1="80" y1="0" x2="80" y2="400" stroke-width="3" stroke="#223d2e" />
+    <line x1="120" y1="0" x2="120" y2="400" stroke-width="3" stroke="#223d2e" />
+    <path d="M80,20 L120,50 M80,80 L120,50 M80,80 L120,110 M80,140 L120,110 M80,140 L120,170 M80,200 L120,170 M80,200 L120,230 M80,260 L120,230 M80,260 L120,290 M80,320 L120,290 M80,320 L120,350 M80,380 L120,350" />
+
+    <!-- Right Truss Upright -->
+    <line x1="880" y1="0" x2="880" y2="400" stroke-width="3" stroke="#223d2e" />
+    <line x1="920" y1="0" x2="920" y2="400" stroke-width="3" stroke="#223d2e" />
+    <path d="M880,20 L920,50 M880,80 L920,50 M880,80 L920,110 M880,140 L920,110 M880,140 L920,170 M880,200 L920,170 M880,200 L920,230 M880,260 L920,230 M880,260 L920,290 M880,320 L920,290 M880,320 L920,350 M880,380 L920,350" />
+
+    <!-- Top Horizontal Truss Bar -->
+    <line x1="60" y1="30" x2="940" y2="30" stroke-width="4" stroke="#2b4736" />
+    <line x1="60" y1="60" x2="940" y2="60" stroke-width="4" stroke="#2b4736" />
+    <path d="M60,30 L90,60 M90,60 L120,30 M120,30 L150,60 M150,60 L180,30 M180,30 L210,60 M210,60 L240,30 M240,30 L270,60 M270,60 L300,30 M300,30 L330,60 M330,60 L360,30 M360,30 L390,60 M390,60 L420,30 M420,30 L450,60 M450,60 L480,30 M480,30 L510,60 M510,60 L540,30 M540,30 L570,60 M570,60 L600,30 M600,30 L630,60 M630,60 L660,30 M660,30 L690,60 M690,60 L720,30 M720,30 L750,60 M750,60 L780,30 M780,30 L810,60 M810,60 L840,30 M840,30 L870,60 M870,60 L900,30 M900,30 L930,60" />
+  </g>
+
+  <!-- Stage Lighting Beams (Volumetric Green Cones) -->
+  <g style="mix-blend-mode: screen;">
+    <!-- Beam 1: Left Angled -->
+    <polygon points="190,60 80,480 320,480" fill="url(#coneGrad2)" />
+    <!-- Beam 2: Center-Left -->
+    <polygon points="360,60 220,500 480,500" fill="url(#coneGrad1)" />
+    <!-- Beam 3: Center-Right -->
+    <polygon points="640,60 520,500 780,500" fill="url(#coneGrad1)" />
+    <!-- Beam 4: Right Angled -->
+    <polygon points="810,60 680,480 920,480" fill="url(#coneGrad2)" />
+  </g>
+
+  <!-- Spotlights on Truss (Lamp fixtures) -->
+  <g fill="#111814" stroke="#00e65c" stroke-width="1.5">
+    <!-- Spot 1 -->
+    <path d="M180,60 L200,60 L210,80 L170,80 Z" />
+    <ellipse cx="190" cy="80" rx="20" ry="5" fill="#00ff66" opacity="0.9" />
+
+    <!-- Spot 2 -->
+    <path d="M350,60 L370,60 L380,80 L340,80 Z" />
+    <ellipse cx="360" cy="80" rx="20" ry="5" fill="#00ff66" opacity="0.9" />
+
+    <!-- Spot 3 -->
+    <path d="M630,60 L650,60 L660,80 L620,80 Z" />
+    <ellipse cx="640" cy="80" rx="20" ry="5" fill="#00ff66" opacity="0.9" />
+
+    <!-- Spot 4 -->
+    <path d="M800,60 L820,60 L830,80 L790,80 Z" />
+    <ellipse cx="810" cy="80" rx="20" ry="5" fill="#00ff66" opacity="0.9" />
+  </g>
+
+  <!-- Stage Floor Perspective Plane -->
+  <polygon points="0,370 1000,370 1000,560 0,560" fill="url(#floorGrad)" />
+  <!-- Stage Floor Horizon Line -->
+  <line x1="0" y1="370" x2="1000" y2="370" stroke="#00e65c" stroke-width="1.5" opacity="0.3" />
+
+  <!-- Floor Lighting Glow Pools -->
+  <ellipse cx="200" cy="460" rx="140" ry="40" fill="url(#floorPool)" />
+  <ellipse cx="350" cy="470" rx="150" ry="45" fill="url(#floorPool)" />
+  <ellipse cx="650" cy="470" rx="150" ry="45" fill="url(#floorPool)" />
+  <ellipse cx="800" cy="460" rx="140" ry="40" fill="url(#floorPool)" />
+  <ellipse cx="500" cy="440" rx="190" ry="50" fill="url(#floorPool)" />
+
+  <!-- Drum Riser Platform in Center -->
+  <g>
+    <!-- Riser top -->
+    <polygon points="380,350 620,350 640,380 360,380" fill="#141c17" stroke="#1f3827" stroke-width="2" />
+    <!-- Riser front -->
+    <polygon points="360,380 640,380 640,395 360,395" fill="#0a0f0c" stroke="#1f3827" stroke-width="1" />
+  </g>
+
+  <!-- ================= DRUM KIT (Center Stage) ================= -->
+  <g id="drumKit">
+    <!-- Drum Throne -->
+    <ellipse cx="500" cy="335" rx="18" ry="7" fill="#1c2620" stroke="#2e4236" />
+    <line x1="500" y1="342" x2="500" y2="370" stroke="#4a5e52" stroke-width="3" />
+
+    <!-- Bass Drum (Kick Drum) -->
+    <!-- Drum Shell -->
+    <ellipse cx="500" cy="340" rx="55" ry="55" fill="#0c140f" stroke="#2b4736" stroke-width="4" />
+    <!-- Drum Head -->
+    <ellipse cx="500" cy="340" rx="50" ry="50" fill="#060907" />
+    <!-- Resonant Port Hole -->
+    <circle cx="528" cy="348" r="10" fill="#020302" stroke="#1b2920" stroke-width="1.5" />
+    <!-- Bass Drum Rim & Lugs -->
+    <circle cx="500" cy="340" r="53" fill="none" stroke="#00e65c" stroke-width="1" opacity="0.4" />
+    <!-- Kick Drum Spurs (legs) -->
+    <line x1="450" y1="365" x2="435" y2="385" stroke="#7a8f82" stroke-width="3" />
+    <line x1="550" y1="365" x2="565" y2="385" stroke="#7a8f82" stroke-width="3" />
+
+    <!-- Mounted Toms on Kick -->
+    <!-- Left Tom -->
+    <ellipse cx="475" cy="275" rx="22" ry="16" fill="#141f18" stroke="#3d5c48" stroke-width="2" />
+    <ellipse cx="475" cy="273" rx="20" ry="14" fill="#0a0f0c" />
+    <!-- Right Tom -->
+    <ellipse cx="525" cy="275" rx="22" ry="16" fill="#141f18" stroke="#3d5c48" stroke-width="2" />
+    <ellipse cx="525" cy="273" rx="20" ry="14" fill="#0a0f0c" />
+
+    <!-- Snare Drum (Front Left) -->
+    <ellipse cx="435" cy="330" rx="26" ry="14" fill="#16241b" stroke="#00e65c" stroke-width="1.5" opacity="0.8" />
+    <ellipse cx="435" cy="328" rx="24" ry="12" fill="#203327" />
+    <!-- Snare Stand -->
+    <line x1="435" y1="344" x2="435" y2="382" stroke="#687d71" stroke-width="2.5" />
+    <line x1="435" y1="382" x2="420" y2="395" stroke="#687d71" stroke-width="2" />
+    <line x1="435" y1="382" x2="450" y2="395" stroke="#687d71" stroke-width="2" />
+
+    <!-- Floor Tom (Right) -->
+    <ellipse cx="570" cy="335" rx="28" ry="16" fill="#141f18" stroke="#3d5c48" stroke-width="2" />
+    <ellipse cx="570" cy="333" rx="26" ry="14" fill="#0a0f0c" />
+    <line x1="550" y1="345" x2="545" y2="385" stroke="#687d71" stroke-width="2" />
+    <line x1="590" y1="345" x2="595" y2="385" stroke="#687d71" stroke-width="2" />
+
+    <!-- Hi-Hat Cymbals (Far Left) -->
+    <ellipse cx="395" cy="290" rx="26" ry="7" fill="url(#cymbalGrad)" stroke="#ffd700" stroke-width="1" />
+    <ellipse cx="395" cy="292" rx="26" ry="7" fill="url(#cymbalGrad)" opacity="0.9" />
+    <line x1="395" y1="260" x2="395" y2="385" stroke="#7a8f82" stroke-width="2.5" />
+    <line x1="395" y1="385" x2="375" y2="400" stroke="#7a8f82" stroke-width="2" />
+    <line x1="395" y1="385" x2="415" y2="400" stroke="#7a8f82" stroke-width="2" />
+
+    <!-- Crash Cymbal (Left High) -->
+    <ellipse cx="430" cy="235" rx="34" ry="9" fill="url(#cymbalGrad)" stroke="#ffd700" stroke-width="1" />
+    <line x1="430" y1="235" x2="405" y2="375" stroke="#7a8f82" stroke-width="2.5" />
+
+    <!-- Ride Cymbal (Right High) -->
+    <ellipse cx="585" cy="245" rx="38" ry="10" fill="url(#cymbalGrad)" stroke="#ffd700" stroke-width="1" />
+    <line x1="585" y1="245" x2="605" y2="375" stroke="#7a8f82" stroke-width="2.5" />
+  </g>
+
+  <!-- ================= GUITAR AMP STACK (Stage Left) ================= -->
+  <g id="guitarStack">
+    <!-- 4x12 Bottom Cabinet -->
+    <rect x="230" y="315" width="75" height="75" rx="3" fill="#0d1410" stroke="#243d2c" stroke-width="2" />
+    <rect x="234" y="319" width="67" height="67" fill="url(#ampGrill)" />
+    <!-- White amp piping -->
+    <rect x="233" y="318" width="69" height="69" fill="none" stroke="#2d4a36" stroke-width="1" />
+
+    <!-- 4x12 Top Angled Cabinet -->
+    <polygon points="232,245 303,245 305,310 230,310" fill="#0d1410" stroke="#243d2c" stroke-width="2" />
+    <polygon points="236,249 299,249 301,306 234,306" fill="url(#ampGrill)" />
+
+    <!-- Amp Head Unit on Top -->
+    <rect x="228" y="210" width="79" height="32" rx="2" fill="#141e18" stroke="#34543d" stroke-width="2" />
+    <!-- Gold / Brushed Faceplate -->
+    <rect x="233" y="224" width="69" height="14" fill="#1f3325" stroke="#ffd700" stroke-width="0.5" />
+    <!-- Power switch green neon indicator -->
+    <circle cx="292" cy="231" r="2.5" fill="#00ff66" />
+    <!-- Knobs -->
+    <circle cx="245" cy="231" r="2" fill="#ffd700" />
+    <circle cx="253" cy="231" r="2" fill="#ffd700" />
+    <circle cx="261" cy="231" r="2" fill="#ffd700" />
+    <circle cx="269" cy="231" r="2" fill="#ffd700" />
+    <circle cx="277" cy="231" r="2" fill="#ffd700" />
+  </g>
+
+  <!-- ================= BASS AMP STACK (Stage Right) ================= -->
+  <g id="bassStack">
+    <!-- 8x10 Tall Bass Fridge Cabinet -->
+    <rect x="705" y="240" width="80" height="150" rx="3" fill="#0c130f" stroke="#203627" stroke-width="2" />
+    <rect x="710" y="245" width="70" height="140" fill="url(#ampGrill)" />
+    <!-- Silver Grille Cloth division line -->
+    <line x1="710" y1="315" x2="780" y2="315" stroke="#284733" stroke-width="1.5" />
+
+    <!-- Bass Amp Head -->
+    <rect x="700" y="205" width="90" height="32" rx="2" fill="#121c15" stroke="#2b4734" stroke-width="2" />
+    <rect x="706" y="215" width="78" height="16" fill="#1c2d22" />
+    <circle cx="718" cy="223" r="3" fill="#00e65c" />
+    <!-- Blue EQ sliders -->
+    <line x1="735" y1="218" x2="735" y2="228" stroke="#00ffff" stroke-width="1.5" />
+    <line x1="742" y1="218" x2="742" y2="228" stroke="#00ffff" stroke-width="1.5" />
+    <line x1="749" y1="218" x2="749" y2="228" stroke="#00ffff" stroke-width="1.5" />
+    <line x1="756" y1="218" x2="756" y2="228" stroke="#00ffff" stroke-width="1.5" />
+  </g>
+
+  <!-- ================= GUITAR ON STAND (Stage Right) ================= -->
+  <g id="guitarOnStand">
+    <!-- Guitar Stand Base -->
+    <path d="M815,395 L835,370 L855,395" stroke="#52665b" stroke-width="2.5" fill="none" />
+    <line x1="835" y1="370" x2="835" y2="300" stroke="#52665b" stroke-width="3" />
+    <!-- Cradle -->
+    <path d="M822,350 Q835,355 848,350" stroke="#52665b" stroke-width="3" fill="none" />
+
+    <!-- Electric Guitar Body (Angled Lean) -->
+    <g transform="rotate(7, 835, 340)">
+      <!-- Guitar Body (Stratocaster shape) -->
+      <path d="M820,330 C815,315 825,305 833,308 C838,300 845,305 848,312 C855,325 850,345 842,355 C832,365 818,360 820,340 Z" fill="#0a3d1c" stroke="#00e65c" stroke-width="1.5" />
+      <!-- Pickguard -->
+      <path d="M826,325 C824,318 830,314 836,316 C838,325 835,340 828,338 Z" fill="#f0f7f3" opacity="0.9" />
+      <!-- Pickups -->
+      <rect x="830" y="322" width="10" height="2.5" fill="#111" />
+      <rect x="830" y="328" width="10" height="2.5" fill="#111" />
+      <rect x="830" y="334" width="10" height="2.5" fill="#111" />
+      <!-- Guitar Neck -->
+      <rect x="833" y="250" width="5" height="60" fill="#d9ab75" stroke="#3b2b18" stroke-width="0.5" />
+      <!-- Headstock -->
+      <path d="M833,250 C833,243 839,240 840,248 Z" fill="#d9ab75" />
+    </g>
+  </g>
+
+  <!-- ================= MICROPHONE STAND (Center Stage Front) ================= -->
+  <g id="micStand">
+    <!-- Cast Iron Round Base -->
+    <ellipse cx="500" cy="455" rx="20" ry="6" fill="#16221a" stroke="#2e4736" stroke-width="2" />
+    <!-- Straight Chrome Shaft -->
+    <line x1="500" y1="455" x2="500" y2="360" stroke="#8fa899" stroke-width="3" />
+    <!-- Clutch Adjustment Ring -->
+    <rect x="497" y="360" width="6" height="8" rx="1" fill="#203326" stroke="#00e65c" stroke-width="0.5" />
+    <!-- Boom Extension Arm (slanted) -->
+    <line x1="500" y1="362" x2="480" y2="285" stroke="#8fa899" stroke-width="2.5" />
+    <!-- Mic Clip -->
+    <rect x="477" y="280" width="5" height="7" rx="1" fill="#1a2e21" />
+    <!-- Dynamic Microphone (Shure SM58 style) -->
+    <path d="M479,275 L481,283 L476,285 L474,277 Z" fill="#2a3d31" />
+    <circle cx="476" cy="273" r="5" fill="#8fa899" stroke="#b0c9bb" stroke-width="1" />
+    <!-- Cable coiled at the base -->
+    <path d="M500,455 C485,460 480,450 470,458 C460,465 440,460 430,470" fill="none" stroke="#0a120c" stroke-width="3" />
+  </g>
+
+  <!-- ================= STAGE FLOOR WEDGES (Monitors in foreground) ================= -->
+  <g id="floorMonitors">
+    <!-- Left Monitor Wedge -->
+    <polygon points="120,440 220,440 235,485 105,485" fill="#0b120d" stroke="#1f3826" stroke-width="2" />
+    <polygon points="125,444 215,444 228,481 112,481" fill="url(#ampGrill)" />
+    <!-- Angle support line -->
+    <line x1="105" y1="485" x2="120" y2="440" stroke="#00e65c" stroke-width="1" opacity="0.3" />
+
+    <!-- Center Monitor Wedge -->
+    <polygon points="435,465 565,465 585,510 415,510" fill="#0b120d" stroke="#1f3826" stroke-width="2" />
+    <polygon points="442,469 558,469 576,505 424,505" fill="url(#ampGrill)" />
+
+    <!-- Right Monitor Wedge -->
+    <polygon points="780,440 880,440 895,485 765,485" fill="#0b120d" stroke="#1f3826" stroke-width="2" />
+    <polygon points="785,444 875,444 888,481 772,481" fill="url(#ampGrill)" />
+  </g>
+
+  <!-- Atmospheric Stage Smoke & Fog Layers -->
+  <g opacity="0.3" style="mix-blend-mode: screen;">
+    <ellipse cx="500" cy="400" rx="350" ry="70" fill="#00ff66" filter="blur(40px)" />
+    <ellipse cx="250" cy="430" rx="200" ry="50" fill="#00cc52" filter="blur(35px)" />
+    <ellipse cx="750" cy="430" rx="200" ry="50" fill="#00cc52" filter="blur(35px)" />
+  </g>
+
+  <!-- Subtle Vignette Frame -->
+  <rect width="1000" height="560" fill="none" stroke="#030805" stroke-width="12" />
+</svg>

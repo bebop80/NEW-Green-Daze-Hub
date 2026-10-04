@@ -1,15 +1,31 @@
 <!doctype html>
-<html lang="it">
+<html lang="it" class="dark">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <script>
+    (function() {
+      try {
+        var stored = localStorage.getItem('theme');
+        if (stored === 'light') {
+          document.documentElement.classList.remove('dark');
+          document.documentElement.classList.add('light');
+        } else {
+          document.documentElement.classList.remove('light');
+          document.documentElement.classList.add('dark');
+        }
+      } catch (e) {
+        document.documentElement.classList.add('dark');
+      }
+    })();
+  </script>
   <link rel="stylesheet" href="./src/index.css">
   <title>Green Daze Tracking Hub</title>
   <meta name="description" content="Green Daze Tracking Hub - Versione ZERO. Professional rehearsal and concert tracker for the band Green Daze.">
   <meta property="og:title" content="Green Daze Tracking Hub">
   <meta property="og:description" content="Green Daze Tracking Hub - Versione ZERO. Professional rehearsal and concert tracker for the band Green Daze.">
 </head>
-<body class="bg-brand-dark overflow-x-hidden">
+<body class="bg-[#121620] overflow-x-hidden">
   <div id="root"></div>
   <script type="module" src="./src/index.tsx"></script>
 </body>

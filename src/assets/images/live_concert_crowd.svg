@@ -1,0 +1,254 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 560" width="1000" height="560">
+  <defs>
+    <!-- Background Arena / Concert Stadium Dark Gradient -->
+    <linearGradient id="arenaBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#040907" />
+      <stop offset="35%" stop-color="#08170f" />
+      <stop offset="65%" stop-color="#050e09" />
+      <stop offset="100%" stop-color="#020503" />
+    </linearGradient>
+
+    <!-- Intense Central Stage Halo / Backlight -->
+    <radialGradient id="stageBurst" cx="50%" cy="42%" r="45%">
+      <stop offset="0%" stop-color="#80ffb3" stop-opacity="0.95" />
+      <stop offset="25%" stop-color="#00e65c" stop-opacity="0.7" />
+      <stop offset="55%" stop-color="#008033" stop-opacity="0.3" />
+      <stop offset="85%" stop-color="#00260f" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#000000" stop-opacity="0" />
+    </radialGradient>
+
+    <!-- Cyan / Green Stage Beams -->
+    <linearGradient id="cyanBeam" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#00ffff" stop-opacity="0.8" />
+      <stop offset="40%" stop-color="#00e6cc" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#00332b" stop-opacity="0" />
+    </linearGradient>
+
+    <linearGradient id="greenBeam" x1="50%" y1="0%" x2="50%" y2="100%">
+      <stop offset="0%" stop-color="#00ff66" stop-opacity="0.85" />
+      <stop offset="40%" stop-color="#00cc52" stop-opacity="0.4" />
+      <stop offset="100%" stop-color="#003314" stop-opacity="0" />
+    </linearGradient>
+
+    <!-- Phone Screen Glow -->
+    <radialGradient id="phoneGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="30%" stop-color="#80ffff" stop-opacity="0.6" />
+      <stop offset="100%" stop-color="#00e6ff" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+
+  <!-- Deep Arena Dark Background -->
+  <rect width="1000" height="560" fill="url(#arenaBg)" />
+
+  <!-- Massive Stage Backlight Bloom -->
+  <ellipse cx="500" cy="220" rx="350" ry="180" fill="url(#stageBurst)" />
+
+  <!-- Laser & Moving Head Light Beams criss-crossing into the crowd -->
+  <g style="mix-blend-mode: screen;" opacity="0.85">
+    <!-- Beam from Far Left to Right Crowd -->
+    <polygon points="120,40 380,480 520,480" fill="url(#greenBeam)" />
+    <!-- Beam from Left to Center Crowd -->
+    <polygon points="260,30 40,500 220,500" fill="url(#cyanBeam)" />
+    <!-- Center Beams shooting upwards into arena -->
+    <polygon points="450,230 180,0 260,0" fill="url(#greenBeam)" opacity="0.6" />
+    <polygon points="550,230 740,0 820,0" fill="url(#cyanBeam)" opacity="0.6" />
+    <!-- Beam from Right to Center Crowd -->
+    <polygon points="740,30 780,500 960,500" fill="url(#cyanBeam)" />
+    <!-- Beam from Far Right to Left Crowd -->
+    <polygon points="880,40 480,480 620,480" fill="url(#greenBeam)" />
+  </g>
+
+  <!-- Stage Rig Overhead Truss with Blinding Light Fixtures -->
+  <g stroke="#1a3324" stroke-width="2">
+    <!-- Main Top Truss -->
+    <line x1="80" y1="35" x2="920" y2="35" stroke-width="5" stroke="#254d35" />
+    <line x1="80" y1="65" x2="920" y2="65" stroke-width="5" stroke="#254d35" />
+    <!-- Truss Cross Bracing -->
+    <path d="M80,35 L130,65 L180,35 L230,65 L280,35 L330,65 L380,35 L430,65 L480,35 L530,65 L580,35 L630,65 L680,35 L730,65 L780,35 L830,65 L880,35 L920,65" fill="none" opacity="0.7" />
+
+    <!-- Stage Spot Lamps (Emitting blinding flare stars) -->
+    <g fill="#ffffff">
+      <!-- Lamp 1 -->
+      <circle cx="150" cy="50" r="7" />
+      <circle cx="150" cy="50" r="18" fill="#00ff66" opacity="0.4" />
+      <!-- Lamp 2 -->
+      <circle cx="280" cy="50" r="8" />
+      <circle cx="280" cy="50" r="22" fill="#00ffff" opacity="0.4" />
+      <!-- Lamp 3 -->
+      <circle cx="420" cy="50" r="9" />
+      <circle cx="420" cy="50" r="26" fill="#00ff66" opacity="0.5" />
+      <!-- Lamp 4 -->
+      <circle cx="580" cy="50" r="9" />
+      <circle cx="580" cy="50" r="26" fill="#00ff66" opacity="0.5" />
+      <!-- Lamp 5 -->
+      <circle cx="720" cy="50" r="8" />
+      <circle cx="720" cy="50" r="22" fill="#00ffff" opacity="0.4" />
+      <!-- Lamp 6 -->
+      <circle cx="850" cy="50" r="7" />
+      <circle cx="850" cy="50" r="18" fill="#00ff66" opacity="0.4" />
+    </g>
+  </g>
+
+  <!-- Elevated Concert Stage Platform in Midground -->
+  <polygon points="160,250 840,250 900,290 100,290" fill="#050a07" stroke="#00e65c" stroke-width="1.5" />
+
+  <!-- ================= SILHOUETTES OF ROCK BAND MUSICIANS (Backlit, NO FACES) ================= -->
+  <g id="bandMusicians" fill="#020503">
+    <!-- Backlighting Rim Glow on Musicians -->
+    <!-- 1. DRUMMER on Riser (Center-Back) -->
+    <g transform="translate(485, 175)">
+      <!-- Drummer Body & Raised Arms with drumsticks -->
+      <path d="M12,35 C5,35 0,42 0,55 L30,55 C30,42 25,35 18,35 Z" />
+      <circle cx="15" cy="24" r="9" />
+      <!-- Raised Drumstick Arms -->
+      <path d="M5,35 L-8,15 L-6,14 L7,32 Z" />
+      <path d="M25,35 L38,15 L40,14 L27,32 Z" />
+      <!-- Drum Kit Silhouette -->
+      <ellipse cx="15" cy="62" rx="30" ry="12" />
+      <ellipse cx="-15" cy="50" rx="14" ry="4" fill="#142e1d" stroke="#00ff66" stroke-width="0.8" />
+      <ellipse cx="45" cy="48" rx="15" ry="4" fill="#142e1d" stroke="#00ff66" stroke-width="0.8" />
+    </g>
+
+    <!-- 2. LEAD GUITARIST (Stage Left, rocking out) -->
+    <g transform="translate(310, 160)">
+      <!-- Head with long rock hair silhouette, head tilted down (no face) -->
+      <circle cx="28" cy="22" r="10" />
+      <path d="M20,20 C16,28 22,38 28,38 C34,38 40,28 36,20 Z" />
+      <!-- Torso in rock stance, legs spread wide -->
+      <path d="M15,35 L40,35 L48,85 L32,85 L28,55 L24,85 L8,85 Z" />
+      <!-- Electric Guitar Neck pointing UP at 45 degrees -->
+      <path d="M10,48 L52,42 L50,56 L8,62 Z" /> <!-- Guitar body -->
+      <line x1="8" y1="58" x2="-28" y2="18" stroke="#020503" stroke-width="4.5" /> <!-- Neck -->
+      <line x1="8" y1="58" x2="-28" y2="18" stroke="#00ff66" stroke-width="1" opacity="0.6" /> <!-- Rim light -->
+      <!-- Arms shredding on guitar -->
+      <path d="M16,36 L-2,32 L6,50 Z" />
+      <path d="M38,36 L32,48 L42,50 Z" />
+    </g>
+
+    <!-- 3. LEAD SINGER (Center Stage, dynamic pose holding mic stand) -->
+    <g transform="translate(480, 150)">
+      <!-- Head thrown back singing into mic, silhouette only -->
+      <circle cx="20" cy="20" r="11" />
+      <!-- Torso leaning into performance -->
+      <path d="M8,34 L32,34 L30,95 L22,95 L20,60 L18,95 L10,95 Z" />
+      <!-- Arm holding angled microphone stand -->
+      <line x1="18" y1="36" x2="35" y2="30" stroke="#020503" stroke-width="4" />
+      <!-- Mic stand silhouette -->
+      <line x1="38" y1="18" x2="32" y2="95" stroke="#020503" stroke-width="3.5" />
+      <line x1="38" y1="18" x2="32" y2="95" stroke="#00ff66" stroke-width="0.8" opacity="0.7" />
+    </g>
+
+    <!-- 4. BASSIST (Stage Right, solid rock pose) -->
+    <g transform="translate(630, 165)">
+      <!-- Head with cap / silhouette -->
+      <circle cx="24" cy="22" r="10" />
+      <!-- Torso and wide rock stance -->
+      <path d="M12,34 L36,34 L42,85 L28,85 L24,55 L20,85 L6,85 Z" />
+      <!-- Low slung Bass Guitar -->
+      <path d="M8,55 L42,52 L40,65 L6,68 Z" />
+      <line x1="42" y1="52" x2="78" y2="28" stroke="#020503" stroke-width="5" />
+      <line x1="42" y1="52" x2="78" y2="28" stroke="#00ffff" stroke-width="1" opacity="0.6" />
+    </g>
+  </g>
+
+  <!-- Stage Fog & Atmosphere swirling between stage and crowd -->
+  <g opacity="0.4" style="mix-blend-mode: screen;">
+    <ellipse cx="500" cy="280" rx="420" ry="40" fill="#00ff66" filter="blur(25px)" />
+    <ellipse cx="300" cy="300" rx="250" ry="35" fill="#00ffff" filter="blur(25px)" />
+    <ellipse cx="700" cy="300" rx="250" ry="35" fill="#00e65c" filter="blur(25px)" />
+  </g>
+
+  <!-- ================= CONCERT CROWD (Silhouettes from Behind, Hands in Air) ================= -->
+  <!-- Layer 1: Mid-Crowd heads and silhouettes -->
+  <g fill="#020503" opacity="0.95">
+    <!-- Mid distance crowd heads -->
+    <circle cx="80" cy="370" r="22" />
+    <circle cx="140" cy="355" r="24" />
+    <circle cx="210" cy="365" r="23" />
+    <circle cx="280" cy="350" r="26" />
+    <circle cx="350" cy="360" r="25" />
+    <circle cx="420" cy="345" r="28" />
+    <circle cx="490" cy="355" r="27" />
+    <circle cx="560" cy="345" r="28" />
+    <circle cx="630" cy="360" r="26" />
+    <circle cx="700" cy="350" r="25" />
+    <circle cx="770" cy="365" r="24" />
+    <circle cx="840" cy="355" r="25" />
+    <circle cx="910" cy="370" r="23" />
+  </g>
+
+  <!-- Layer 2: Foreground Crowd (Heads, Shoulders, Raised Hands & Rock Horns 🤘) -->
+  <g fill="#010302">
+    <!-- Massive Continuous Audience Body Mass at the Bottom -->
+    <path d="M0,450 Q100,430 200,445 T400,435 T600,440 T800,430 T1000,450 L1000,560 L0,560 Z" />
+
+    <!-- Specific Crowd Person 1 (Far Left, arm in air) -->
+    <circle cx="90" cy="450" r="38" />
+    <!-- Raised Arm with Rock Horns 🤘 -->
+    <path d="M110,460 L140,320 L160,320 L140,460 Z" />
+    <!-- Hand with Horns (Index & Pinky up, middle/ring down, thumb holding) -->
+    <g transform="translate(138, 280)">
+      <rect x="0" y="25" width="22" height="20" rx="4" />
+      <rect x="0" y="5" width="5.5" height="25" rx="2.5" /> <!-- Index -->
+      <rect x="16" y="5" width="5.5" height="25" rx="2.5" /> <!-- Pinky -->
+      <rect x="6" y="16" width="5" height="12" rx="2" /> <!-- Folded Middle -->
+      <rect x="11" y="16" width="5" height="12" rx="2" /> <!-- Folded Ring -->
+    </g>
+
+    <!-- Specific Crowd Person 2 (Left Center) -->
+    <circle cx="260" cy="430" r="42" />
+    <path d="M210,470 C220,430 300,430 310,470 L310,560 L210,560 Z" />
+    <!-- Two Hands clapping overhead -->
+    <path d="M235,430 L220,310 L235,310 L255,430 Z" />
+    <path d="M285,430 L300,310 L285,310 L265,430 Z" />
+    <!-- Clapping hands silhouette -->
+    <ellipse cx="260" cy="305" rx="14" ry="18" />
+
+    <!-- Specific Crowd Person 3 (Center Left with smartphone recording) -->
+    <circle cx="410" cy="440" r="40" />
+    <!-- Arm holding phone up -->
+    <path d="M420,450 L435,320 L450,320 L445,450 Z" />
+    <!-- Smartphone held up -->
+    <rect x="424" y="295" width="32" height="22" rx="3" fill="#010302" stroke="#00e65c" stroke-width="1.5" />
+    <!-- Phone Screen glowing bright with concert preview -->
+    <rect x="426" y="297" width="28" height="18" rx="2" fill="url(#phoneGlow)" opacity="0.9" />
+
+    <!-- Specific Crowd Person 4 (Center Right, double rock horns 🤘) -->
+    <circle cx="580" cy="435" r="44" />
+    <!-- Right Arm with Rock Horns -->
+    <path d="M595,440 L630,300 L650,300 L625,440 Z" />
+    <g transform="translate(630, 260)">
+      <rect x="0" y="25" width="22" height="20" rx="4" />
+      <rect x="0" y="5" width="5.5" height="25" rx="2.5" /> <!-- Index -->
+      <rect x="16" y="5" width="5.5" height="25" rx="2.5" /> <!-- Pinky -->
+      <rect x="6" y="16" width="5" height="12" rx="2" />
+      <rect x="11" y="16" width="5" height="12" rx="2" />
+    </g>
+
+    <!-- Specific Crowd Person 5 (Right Center, fist pump) -->
+    <circle cx="750" cy="440" r="40" />
+    <!-- Raised Arm with Raised Fist in rock salute -->
+    <path d="M735,450 L715,315 L735,315 L760,450 Z" />
+    <circle cx="720" cy="305" r="14" /> <!-- Clenched fist -->
+
+    <!-- Specific Crowd Person 6 (Far Right, rock horns) -->
+    <circle cx="910" cy="450" r="38" />
+    <path d="M890,460 L860,320 L880,320 L915,460 Z" />
+    <g transform="translate(855, 280)">
+      <rect x="0" y="25" width="22" height="20" rx="4" />
+      <rect x="0" y="5" width="5.5" height="25" rx="2.5" />
+      <rect x="16" y="5" width="5.5" height="25" rx="2.5" />
+      <rect x="6" y="16" width="5" height="12" rx="2" />
+      <rect x="11" y="16" width="5" height="12" rx="2" />
+    </g>
+  </g>
+
+  <!-- Ambient Light Mist Over Crowd Bottom -->
+  <linearGradient id="bottomFade" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" stop-color="#000000" stop-opacity="0" />
+    <stop offset="50%" stop-color="#050d09" stop-opacity="0.4" />
+    <stop offset="100%" stop-color="#020503" stop-opacity="0.8" />
+  </linearGradient>
+  <rect y="380" width="1000" height="180" fill="url(#bottomFade)" />
+</svg>

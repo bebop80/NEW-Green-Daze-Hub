@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { 
   Ticket, 
   Calendar, 
@@ -11,10 +11,8 @@ import {
   ChevronLeft, 
   ChevronRight, 
   Trophy, 
-  Flame, 
-  Banknote,
-  FileText,
-  AlertTriangle
+  Flame,
+  ArrowUpRight
 } from 'lucide-react';
 import { format, isFuture, isToday } from 'date-fns';
 import { it } from 'date-fns/locale';
@@ -22,6 +20,7 @@ import { AppData, Concert } from '../../types';
 import { safeParseLocal } from '../../lib/utils';
 import { CalendarExportModal, CalendarEventItem } from '../modals/CalendarExportModal';
 import { PastConcertsModal } from '../modals/PastConcertsModal';
+import concertBg from '../../assets/images/gemini_concert_bg.jpg';
 
 interface ConcertiTabProps {
   data: AppData | null;
@@ -88,50 +87,57 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
   };
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col justify-between gap-2.5 overflow-hidden">
-      {/* 1. CARD CONCERTI PROGRAMMATI (PROSSIMI LIVE) */}
-      <div className="flex-1 min-h-0 glass-card p-3 sm:p-3.5 flex flex-col justify-between border-brand-border/60 relative overflow-hidden">
-        {/* Header */}
-        <div className="flex items-center justify-between gap-2 flex-shrink-0 mb-1.5">
-          <div className="flex items-center gap-1.5">
-            <Flame size={15} className="text-brand-green" />
-            <h2 className="font-display font-bold uppercase tracking-wider text-[11px] text-text-secondary">
-              Concerti Programmati
+    <div className="flex-1 min-h-0 flex flex-col justify-between gap-2.5 overflow-hidden text-slate-900 dark:text-white">
+      {/* 1. HERO CARD CONCERTI PROGRAMMATI: STESSO SFONDO E TEMA DELLA HOME */}
+      <div className="flex-1 min-h-0 rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#181d29] dark:to-[#0f1219] shadow-xl border border-slate-200 dark:border-white/[0.06] transition-colors">
+        {/* Ambient Stage Lighting */}
+        <div className="hidden dark:block absolute top-0 right-0 w-64 h-64 bg-brand-green/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
+        <div className="hidden dark:block absolute bottom-0 left-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none -ml-16 -mb-16" />
+
+        {/* Header con z-20 per non essere mai coperto */}
+        <div className="flex items-center justify-between gap-2 flex-shrink-0 mb-1 relative z-20 pb-0.5">
+          <div className="flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-brand-green shadow-xs dark:shadow-[0_0_8px_#00e660]" />
+            <h2 className="text-[11px] font-mono tracking-widest text-emerald-700 dark:text-brand-green font-bold uppercase">
+              CONCERTI IN PROGRAMMA
             </h2>
-            <span className="px-1.5 py-0.2 rounded-md bg-brand-dark text-brand-green text-[10px] font-mono font-bold border border-brand-border">
+            <span 
+              style={{ backgroundColor: '#3d3d3d' }}
+              className="px-2 py-0.2 rounded-full text-emerald-400 dark:text-brand-green text-xs font-mono font-bold border border-white/10 dark:border-brand-green/30"
+            >
               {totalUpcoming}
             </span>
           </div>
 
           <button
             onClick={onOpenAddConcert}
-            className="py-1 px-2.5 rounded-xl bg-brand-green hover:bg-brand-green/90 text-black text-[11px] font-black uppercase flex items-center gap-1 cursor-pointer active:scale-95 shadow-sm"
+            className="py-1 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-brand-green dark:hover:bg-brand-green/90 dark:text-black font-rock text-xs tracking-wider uppercase flex items-center gap-1 cursor-pointer active:scale-95 shadow-xs"
           >
-            <Plus size={13} />
+            <Plus size={14} />
             <span>Nuovo Live</span>
           </button>
         </div>
 
         {/* Gig Content */}
         {totalUpcoming > 0 && currentConcert ? (
-          <div className="flex-1 flex flex-col justify-between py-1">
+          <div className="flex-1 flex flex-col justify-between relative z-10">
             {/* Carousel navigation if multiple */}
             {totalUpcoming > 1 && (
-              <div className="flex items-center justify-between gap-2 mb-1">
+              <div className="flex items-center justify-between gap-2 mb-1 z-20 relative">
                 <button
                   onClick={handlePrevSlide}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-brand-dark border border-brand-border text-text-secondary hover:text-text-primary cursor-pointer active:scale-95"
+                  className="w-7 h-7 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white cursor-pointer active:scale-95 shadow-xs"
                 >
                   <ChevronLeft size={16} />
                 </button>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   {upcomingConcerts.map((_, i) => (
                     <button
                       key={i}
                       onClick={() => setActiveSlide(i)}
                       className={`h-1.5 rounded-full transition-all cursor-pointer ${
-                        activeSlide === i ? 'w-5 bg-brand-green' : 'w-1.5 bg-brand-border'
+                        activeSlide === i ? 'w-5 bg-emerald-600 dark:bg-brand-green' : 'w-1.5 bg-slate-300 dark:bg-white/20'
                       }`}
                     />
                   ))}
@@ -139,65 +145,86 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
 
                 <button
                   onClick={handleNextSlide}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg bg-brand-dark border border-brand-border text-text-secondary hover:text-text-primary cursor-pointer active:scale-95"
+                  className="w-7 h-7 flex items-center justify-center rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] text-slate-700 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white cursor-pointer active:scale-95 shadow-xs"
                 >
                   <ChevronRight size={16} />
                 </button>
               </div>
             )}
 
-            {/* Concert Details */}
-            <div className="text-center py-1">
-              <h3 className="font-display font-black text-base sm:text-lg text-text-primary uppercase tracking-tight leading-tight break-words">
-                {currentConcert.name}
-              </h3>
+            {/* Concert Details con foto di sfondo */}
+            <div className="relative -mx-4 sm:-mx-5 mt-1.5 px-4 sm:px-5 py-4 flex-1 flex flex-col justify-center items-center text-center overflow-hidden border-b border-slate-200 dark:border-white/[0.1] shadow-inner">
+              {/* Foto dello Sfondo Concerto */}
+              <img 
+                src={concertBg} 
+                alt="Live Concert Background"
+                loading="eager"
+                decoding="sync"
+                fetchPriority="high"
+                referrerPolicy="no-referrer"
+                className="absolute inset-0 w-full h-full object-cover object-center pointer-events-none brightness-105 contrast-110"
+              />
+              {/* Overlay cinematografico per massima leggibilità del testo */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/45 to-black/75 pointer-events-none" />
+              <div className="absolute inset-0 bg-radial from-transparent via-black/35 to-black/75 pointer-events-none" />
 
-              <div className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-brand-green mt-1">
-                <Calendar size={13} />
-                <span>
-                  {format(safeParseLocal(currentConcert.date), 'EEEE d MMMM yyyy', { locale: it })}
-                </span>
-                {currentConcert.time && <span>• Ore {currentConcert.time}</span>}
-              </div>
+              <div className="relative z-10 space-y-1.5 max-w-full">
+                <h3 
+                  className="font-rock text-white uppercase tracking-wide leading-tight break-words drop-shadow-[0_2px_12px_rgba(0,0,0,0.95)]"
+                  style={{ fontSize: '45px' }}
+                >
+                  {currentConcert.name}
+                </h3>
 
-              {currentConcert.address && (
-                <div className="flex items-center justify-center gap-1 text-[11px] text-text-secondary mt-1 truncate">
-                  <MapPin size={12} className="text-brand-green shrink-0" />
-                  <span className="truncate">{currentConcert.address}</span>
+                <div className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-mono font-bold text-emerald-400 dark:text-brand-green drop-shadow-md">
+                  <Calendar size={13} style={{ backgroundColor: '#000000' }} />
+                  <span style={{ fontSize: '16px', color: '#ffffff' }}>
+                    {format(safeParseLocal(currentConcert.date), 'EEEE d MMMM yyyy', { locale: it })}
+                  </span>
+                  {currentConcert.time && <span>• Ore {currentConcert.time}</span>}
                 </div>
-              )}
 
-              {/* Extra badges: Soundcheck, Cachet */}
-              <div className="flex items-center justify-center gap-2 mt-1.5 flex-wrap">
-                {currentConcert.soundcheck && (
-                  <span className="px-2 py-0.5 rounded-md bg-brand-dark border border-brand-border text-[10px] font-mono text-text-secondary">
-                    Soundcheck: {currentConcert.soundcheck}
-                  </span>
+                {currentConcert.address && (
+                  <div className="flex items-center justify-center gap-1 text-xs text-zinc-300 mt-0.5 truncate drop-shadow-sm">
+                    <MapPin size={12} className="text-emerald-400 dark:text-brand-green shrink-0" />
+                    <span className="truncate" style={{ fontSize: '14px' }}>
+                      {currentConcert.address}
+                    </span>
+                  </div>
                 )}
-                {currentConcert.cachet && (
-                  <span className="px-2 py-0.5 rounded-md bg-brand-green/10 border border-brand-green/30 text-[10px] font-mono font-bold text-brand-green">
-                    Cachet: {currentConcert.cachet}
-                  </span>
-                )}
+
+                {/* Extra badges: Soundcheck & Cachet */}
+                <div className="flex items-center justify-center gap-2 mt-2 flex-wrap">
+                  {currentConcert.soundcheck && (
+                    <span className="px-2.5 py-0.5 rounded-md bg-black/60 backdrop-blur-xs border border-white/[0.12] text-xs font-mono text-zinc-200 shadow-xs">
+                      Soundcheck: {currentConcert.soundcheck}
+                    </span>
+                  )}
+                  {currentConcert.cachet && (
+                    <span className="px-2.5 py-0.5 rounded-md bg-emerald-600 text-white dark:bg-brand-green dark:text-black border border-emerald-400/40 dark:border-brand-green/40 text-xs font-mono font-bold shadow-md shadow-emerald-900/20 dark:shadow-brand-green/20">
+                      Cachet: {currentConcert.cachet}
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 
             {/* Actions Row */}
-            <div className="space-y-1.5 pt-1">
-              <div className="grid grid-cols-3 gap-1.5">
+            <div className="space-y-2 pt-1 border-t border-slate-200 dark:border-white/[0.08]">
+              <div className="grid grid-cols-3 gap-2">
                 {currentConcert.address ? (
                   <a
                     href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(currentConcert.address)}`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="py-1 px-1 flex items-center justify-center gap-1 rounded-lg bg-brand-dark hover:bg-white/5 border border-brand-border text-[10px] font-bold text-text-primary active:scale-95"
+                    className="py-2 px-1 flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] border border-slate-200 dark:border-transparent text-xs font-bold text-slate-800 dark:text-white active:scale-95 transition-all shadow-xs"
                   >
-                    <MapPin size={12} className="text-brand-green" />
+                    <MapPin size={14} className="text-emerald-600 dark:text-brand-green" />
                     <span>Mappa</span>
                   </a>
                 ) : (
-                  <div className="py-1 px-1 flex items-center justify-center gap-1 rounded-lg bg-brand-dark/40 border border-brand-border/30 text-[10px] text-zinc-500">
-                    <MapPin size={12} />
+                  <div className="py-2 px-1 flex items-center justify-center gap-1.5 rounded-xl bg-slate-100/60 dark:bg-white/[0.02] text-xs text-slate-400 dark:text-zinc-600 border border-slate-200 dark:border-transparent">
+                    <MapPin size={14} />
                     <span>Mappa</span>
                   </div>
                 )}
@@ -212,9 +239,9 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
                       description: `Live Green Daze @ ${currentConcert.name}. ${currentConcert.notes || ''}`
                     });
                   }}
-                  className="py-1 px-1 flex items-center justify-center gap-1 rounded-lg bg-brand-dark hover:bg-white/5 border border-brand-border text-[10px] font-bold text-text-primary cursor-pointer active:scale-95"
+                  className="py-2 px-1 flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] border border-slate-200 dark:border-transparent text-xs font-bold text-slate-800 dark:text-white cursor-pointer active:scale-95 transition-all shadow-xs"
                 >
-                  <Calendar size={12} className="text-brand-green" />
+                  <Calendar size={14} className="text-emerald-600 dark:text-brand-green" />
                   <span>Calendario</span>
                 </button>
 
@@ -223,35 +250,35 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
                     const text = `🔥 CONCERTO GREEN DAZE!\n\n🎸 ${currentConcert.name}\n📅 ${format(safeParseLocal(currentConcert.date), 'EEEE d MMMM yyyy', { locale: it })}\n${currentConcert.time ? `🕒 Ore: ${currentConcert.time}\n` : ''}${currentConcert.address ? `📍 ${currentConcert.address}\n` : ''}`;
                     shareInfo(text, 'wa');
                   }}
-                  className="py-1 px-1 flex items-center justify-center gap-1 rounded-lg bg-brand-dark hover:bg-white/5 border border-brand-border text-[10px] font-bold text-text-primary cursor-pointer active:scale-95"
+                  className="py-2 px-1 flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] border border-slate-200 dark:border-transparent text-xs font-bold text-slate-800 dark:text-white cursor-pointer active:scale-95 transition-all shadow-xs"
                 >
-                  <Share2 size={12} className="text-brand-green" />
+                  <Share2 size={14} className="text-emerald-600 dark:text-brand-green" />
                   <span>WhatsApp</span>
                 </button>
               </div>
 
               {/* Edit / Delete Row */}
-              <div className="flex items-center justify-between gap-2 pt-1 border-t border-brand-border/40">
+              <div className="flex items-center justify-between gap-2 pt-0.5">
                 <button
                   onClick={() => onEditConcert(currentConcert)}
-                  className="flex-1 py-1 px-2 rounded-lg bg-brand-card hover:bg-white/5 border border-brand-border text-[10px] font-bold uppercase text-text-secondary hover:text-text-primary flex items-center justify-center gap-1 cursor-pointer active:scale-95"
+                  className="flex-1 py-1.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:bg-white/[0.04] dark:hover:bg-white/[0.08] dark:border-white/[0.08] font-rock text-xs tracking-wider uppercase text-slate-800 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white flex items-center justify-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
                 >
-                  <Pencil size={11} />
-                  <span>Modifica Live</span>
+                  <Pencil size={13} />
+                  <span style={{ fontSize: '14px' }}>Modifica Live</span>
                 </button>
 
                 {confirmDeleteId === currentConcert.id ? (
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     <button
                       onClick={() => handleDelete(currentConcert.id)}
                       disabled={deletingId === currentConcert.id}
-                      className="px-2 py-1 rounded-lg bg-red-500 text-white text-[10px] font-bold uppercase cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-red-600 text-white font-rock text-xs uppercase tracking-wider cursor-pointer shadow-xs"
                     >
                       {deletingId === currentConcert.id ? '...' : 'Sì, Elimina'}
                     </button>
                     <button
                       onClick={() => setConfirmDeleteId(null)}
-                      className="px-2 py-1 rounded-lg bg-brand-dark text-text-secondary text-[10px] border border-brand-border cursor-pointer"
+                      className="px-3 py-1.5 rounded-xl bg-slate-100 text-slate-700 font-rock text-xs border border-slate-200 dark:bg-white/[0.04] dark:text-zinc-300 dark:border-white/[0.08] cursor-pointer"
                     >
                       No
                     </button>
@@ -259,24 +286,24 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
                 ) : (
                   <button
                     onClick={() => setConfirmDeleteId(currentConcert.id)}
-                    className="py-1 px-2 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 text-[10px] font-bold uppercase flex items-center gap-1 cursor-pointer active:scale-95"
+                    className="py-1.5 px-3 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 dark:bg-red-500/10 dark:hover:bg-red-500/20 dark:text-red-400 dark:border-red-500/30 font-rock text-xs uppercase tracking-wider flex items-center gap-1.5 cursor-pointer active:scale-95 shadow-xs"
                   >
-                    <Trash2 size={11} />
-                    <span>Elimina</span>
+                    <Trash2 size={13} />
+                    <span style={{ fontSize: '14px' }}>Elimina</span>
                   </button>
                 )}
               </div>
             </div>
           </div>
         ) : (
-          <div className="flex-1 flex flex-col items-center justify-center py-4 text-center space-y-2">
-            <Ticket size={28} className="text-text-secondary/50" />
-            <p className="text-xs uppercase font-mono text-text-secondary font-bold">
+          <div className="flex-1 flex flex-col items-center justify-center py-8 text-center space-y-3 relative z-10">
+            <Ticket size={36} className="text-emerald-600 dark:text-brand-green/60" />
+            <p className="font-mono text-sm uppercase text-slate-600 dark:text-zinc-400">
               Nessun concerto programmato
             </p>
             <button
               onClick={onOpenAddConcert}
-              className="px-4 py-2 rounded-xl bg-brand-green text-black text-xs font-black uppercase tracking-wider cursor-pointer"
+              className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white dark:bg-brand-green dark:text-black font-rock text-sm uppercase tracking-wider cursor-pointer shadow-lg shadow-emerald-700/20 dark:shadow-brand-green/20"
             >
               + Aggiungi Concerto
             </button>
@@ -284,22 +311,25 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
         )}
       </div>
 
-      {/* 2. CARD STORICO CONCERTI (LIVE PASSATI) */}
-      <div className="glass-card p-3 border-brand-border/60 flex items-center justify-between gap-2 flex-shrink-0">
-        <div className="flex items-center gap-2 min-w-0">
-          <div className="w-8 h-8 rounded-xl bg-brand-dark border border-brand-border flex items-center justify-center text-brand-green shrink-0">
-            <Trophy size={16} />
+      {/* 2. CARD STORICO CONCERTI: SLICK DARK THEME */}
+      <div className="flex-shrink-0 rounded-2xl p-3.5 bg-white dark:bg-gradient-to-r dark:from-[#181d29] dark:to-[#12151e] border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-xl flex items-center justify-between gap-2">
+        <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-emerald-600 dark:text-brand-green shrink-0 shadow-xs">
+            <Trophy size={18} />
           </div>
           <div className="min-w-0">
-            <div className="flex items-center gap-1.5">
-              <span className="font-display font-bold uppercase tracking-wider text-[11px] text-text-primary">
-                Storico Concerti
+            <div className="flex items-center gap-2">
+              <span className="font-rock text-sm sm:text-base tracking-wider uppercase text-slate-900 dark:text-white">
+                STORICO CONCERTI
               </span>
-              <span className="px-1.5 py-0.2 rounded-md bg-brand-dark text-brand-green text-[10px] font-mono font-bold border border-brand-border">
+              <span 
+                style={{ backgroundColor: '#3d3d3d' }}
+                className="px-2 py-0.2 rounded-full text-emerald-400 dark:text-brand-green text-xs font-mono font-bold border border-white/10 dark:border-brand-green/30"
+              >
                 {pastConcerts.length}
               </span>
             </div>
-            <p className="text-[10px] text-text-secondary truncate">
+            <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
               {pastConcerts.length === 0 
                 ? 'Nessun concerto nell\'archivio' 
                 : `Ultimo: ${pastConcerts[0]?.name || ''}`}
@@ -309,9 +339,10 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
 
         <button
           onClick={() => setShowPastModal(true)}
-          className="py-1.5 px-3 rounded-xl bg-brand-card hover:bg-white/5 border border-brand-border text-[11px] font-bold uppercase text-brand-green flex items-center gap-1 cursor-pointer active:scale-95 shrink-0"
+          className="py-1.5 px-3.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:bg-white/[0.05] dark:border-white/[0.08] font-rock text-xs tracking-wider uppercase text-emerald-700 dark:text-brand-green flex items-center gap-1 cursor-pointer active:scale-95 shrink-0 shadow-xs"
         >
           <span>Archivio</span>
+          <ArrowUpRight size={13} />
         </button>
       </div>
 

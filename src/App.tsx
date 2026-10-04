@@ -28,6 +28,25 @@ import { ConcertModal } from './components/modals/ConcertModal';
 import { Modals } from './components/modals/Modals';
 import { AvailabilityModal } from './components/modals/AvailabilityModal';
 
+// Critical Background Images for Instant Tab Switching
+import stageBg from './assets/images/gemini_stage_bg.jpg';
+import concertBg from './assets/images/gemini_concert_bg.jpg';
+import paymentsBg from './assets/images/gemini_payments_bg.jpg';
+import crowdHandsBg from './assets/images/rock_concert_crowd_hands.jpg';
+import punkBg from './assets/images/punk_background_1787240548458.jpg';
+
+// Pre-decode all tab backgrounds into GPU memory so tab transitions are 100% instant
+const APP_BACKGROUND_IMAGES = [stageBg, concertBg, paymentsBg, crowdHandsBg, punkBg];
+if (typeof window !== 'undefined') {
+  APP_BACKGROUND_IMAGES.forEach((src) => {
+    const img = new Image();
+    img.src = src;
+    if (img.decode) {
+      img.decode().catch(() => {});
+    }
+  });
+}
+
 const App = () => {
   const {
     data,
@@ -297,11 +316,11 @@ const App = () => {
   }
 
   return (
-    <div className="h-[100dvh] w-full bg-brand-dark transition-colors duration-300 relative overflow-hidden select-none">
+    <div className="h-[100dvh] w-full bg-[#f1f5f9] dark:bg-[#121620] transition-colors duration-300 relative overflow-hidden select-none flex flex-col justify-center items-center">
       <PunkBackground theme={theme} />
 
-      {/* Mobile Smartphone App Frame */}
-      <div className="relative z-10 h-full max-w-md mx-auto flex flex-col justify-between overflow-hidden">
+      {/* Sleek App Frame: Consistent, refined proportions on smartphone, tablet and PC */}
+      <div className="relative z-10 h-full w-full max-w-[430px] mx-auto flex flex-col justify-between overflow-hidden md:h-[94vh] md:max-h-[850px] md:rounded-3xl md:border md:border-slate-300 md:dark:border-white/[0.08] md:shadow-2xl md:shadow-slate-400/30 md:dark:shadow-black/70 bg-white/95 dark:bg-[#0f1219]/95 backdrop-blur-md transition-colors">
         {/* Top Header: Horizontal Band Name + Theme + Sync + Settings */}
         <AppHeader
           theme={theme}
@@ -311,7 +330,7 @@ const App = () => {
         />
 
         {/* Main Tab Screen Area: Zero Scroll Viewport-Fit */}
-        <main className="flex-1 min-h-0 overflow-hidden relative px-3 py-2 flex flex-col">
+        <main className="flex-1 min-h-0 overflow-hidden relative px-3 sm:px-4 py-2 flex flex-col">
           <AnimatePresence mode="wait">
             {activeTab === 'home' && (
               <motion.div

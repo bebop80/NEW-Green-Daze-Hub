@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;800&family=JetBrains+Mono:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Black+Ops+One&family=Permanent+Marker&family=Bebas+Neue&family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -60,31 +60,46 @@
     color: #0f172a;
   }
 
-  /* Ensure native date and time picker icons adapt to dark / light modes and match text color */
-  .dark input[type="date"]::-webkit-calendar-picker-indicator,
-  .dark input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) brightness(2);
-    opacity: 1;
+  /* Ensure native date and time picker icons are always crisp, bright and light in dark mode */
+  .dark input[type="date"]:not(.custom-picker-input)::-webkit-calendar-picker-indicator,
+  .dark input[type="time"]:not(.custom-picker-input)::-webkit-calendar-picker-indicator,
+  .dark .date-input-white-icon::-webkit-calendar-picker-indicator {
+    filter: brightness(2) contrast(1.2) !important;
+    opacity: 0.95 !important;
     cursor: pointer;
   }
 
-  input[type="date"]::-webkit-calendar-picker-indicator,
-  input[type="time"]::-webkit-calendar-picker-indicator {
-    filter: brightness(0);
-    opacity: 0.85;
+  input[type="date"]:not(.custom-picker-input)::-webkit-calendar-picker-indicator,
+  input[type="time"]:not(.custom-picker-input)::-webkit-calendar-picker-indicator {
     cursor: pointer;
+    opacity: 0.8;
   }
 
-  /* For custom-picker-input: make native indicator transparent but full-click on right area */
+  /* For custom-picker-input: make native indicator completely transparent so it NEVER overlaps with custom icons */
+  input[type="date"].custom-picker-input::-webkit-calendar-picker-indicator,
+  input[type="time"].custom-picker-input::-webkit-calendar-picker-indicator,
+  .dark input[type="date"].custom-picker-input::-webkit-calendar-picker-indicator,
+  .dark input[type="time"].custom-picker-input::-webkit-calendar-picker-indicator,
+  input.custom-picker-input::-webkit-calendar-picker-indicator,
+  .dark input.custom-picker-input::-webkit-calendar-picker-indicator,
   .custom-picker-input::-webkit-calendar-picker-indicator {
     opacity: 0 !important;
-    position: absolute;
-    right: 0;
-    top: 0;
-    width: 2.5rem;
-    height: 100%;
-    cursor: pointer;
-    z-index: 10;
+    position: absolute !important;
+    right: 0 !important;
+    top: 0 !important;
+    width: 2.75rem !important;
+    height: 100% !important;
+    cursor: pointer !important;
+    z-index: 10 !important;
+    background: transparent !important;
+    color: transparent !important;
+  }
+
+  /* Hide inner spin buttons in WebKit for clean custom input */
+  input.custom-picker-input::-webkit-inner-spin-button,
+  .dark input.custom-picker-input::-webkit-inner-spin-button {
+    display: none !important;
+    -webkit-appearance: none !important;
   }
 }
 
