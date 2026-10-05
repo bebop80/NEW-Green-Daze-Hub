@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { format } from 'date-fns';
+import { format, addMonths, startOfMonth, endOfMonth } from 'date-fns';
 import { collection, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Member } from '../types';
@@ -148,36 +148,92 @@ export const useBandAvailability = (rawMembers?: Member[]) => {
     return false;
   };
 
-  // List of members who have entered at least one preference, preserving their assigned color
+  // Option 1 Target Horizon Logic:
+  // - Days 1 to 20: Target is current month (focus on remaining days: todayKey to endOfCurrentMonthKey).
+  // - Days 21 to end of month: Target switches automatically to next month (startOfNextMonthKey to endOfNextMonthKey).
+  // If no one has filled next month yet while in late month, we also include remaining future days of current month so initials don't disappear prematurely.
+  const targetPeriodInfo = useMemo(() => {
+    const now = new Date();
+    const todayKey = format(now, 'yyyy-MM-dd');
+    const isLateMonth = now.getDate() >= 21;
+
+    const currentMonthEnd = format(endOfMonth(now), 'yyyy-MM-dd');
+    const nextMonth = addMonths(now, 1);
+    const nextMonthStart = format(startOfMonth(nextMonth), 'yyyy-MM-dd');
+    const nextMonthEnd = format(endOfMonth(nextMonth), 'yyyy-MM-dd');
+
+    return {
+      now,
+      todayKey,
+      isLateMonth,
+      currentMonthEnd,
+      nextMonth,
+      nextMonthStart,
+      nextMonthEnd
+    };
+  }, []);
+
+  // Members who have marked availability in the active target period:
   const availableMembers = useMemo(() => {
-    return members.filter((m) => {
-      const target = m.name.trim().toLowerCase();
+    const { todayKey, isLateMonth, currentMonthEnd, nextMonthStart, nextMonthEnd } = targetPeriodInfo;
+
+    // Helper to test if member has preferences in a date range
+    const memberHasDatesInRange = (memberName: string, rangeStart: string, rangeEnd: string): boolean => {
+      const target = memberName.trim().toLowerCase();
       for (const [key, dates] of Object.entries(availabilityMap)) {
         if (key.trim().toLowerCase() === target && dates) {
-          const hasAny = Object.values(dates).some(
-            (v) => v === true || v === 'true' || Boolean(v)
-          );
+          const hasAny = Object.entries(dates).some(([dKey, val]) => {
+            const isAvailable = val === true || val === 'true' || Boolean(val);
+            return isAvailable && dKey >= rangeStart && dKey <= rangeEnd;
+          });
           if (hasAny) return true;
         }
       }
       return false;
-    });
-  }, [members, availabilityMap]);
+    };
 
-  // Count of members with at least one preference
+    if (isLateMonth) {
+      // Check next month first (switch proattivo)
+      const nextMonthMembers = members.filter((m) =>
+        memberHasDatesInRange(m.name, nextMonthStart, nextMonthEnd)
+      );
+
+      // If at least one member has filled next month, show next month members!
+      if (nextMonthMembers.length > 0) {
+        return nextMonthMembers;
+      }
+
+      // If nobody has filled next month yet, fall back to remaining days of current month
+      return members.filter((m) =>
+        memberHasDatesInRange(m.name, todayKey, currentMonthEnd)
+      );
+    } else {
+      // Days 1-20: current month from today onwards
+      return members.filter((m) =>
+        memberHasDatesInRange(m.name, todayKey, currentMonthEnd)
+      );
+    }
+  }, [members, availabilityMap, targetPeriodInfo]);
+
+  // Count of members with at least one preference in target period
   const availableMembersCount = availableMembers.length;
 
   // Check if there is at least one day compatible with ALL members in the band
+  // In late month: checks next month and remaining days of current month.
+  // In early month: checks current month from today onwards.
   const hasAllMembersCommonDate = useMemo(() => {
     if (members.length < 2) return false;
 
-    const todayKey = format(new Date(), 'yyyy-MM-dd');
+    const { todayKey, isLateMonth, currentMonthEnd, nextMonthEnd } = targetPeriodInfo;
     const candidateDates = new Set<string>();
+
+    const rangeStart = todayKey;
+    const rangeEnd = isLateMonth ? nextMonthEnd : currentMonthEnd;
 
     for (const dates of Object.values(availabilityMap)) {
       if (dates) {
         for (const [dateKey, val] of Object.entries(dates)) {
-          if (Boolean(val) && dateKey >= todayKey) {
+          if (Boolean(val) && dateKey >= rangeStart && dateKey <= rangeEnd) {
             candidateDates.add(dateKey);
           }
         }
@@ -192,13 +248,14 @@ export const useBandAvailability = (rawMembers?: Member[]) => {
     }
 
     return false;
-  }, [members, availabilityMap]);
+  }, [members, availabilityMap, targetPeriodInfo]);
 
   return {
     availabilityMap,
     members,
     availableMembers,
     availableMembersCount,
-    hasAllMembersCommonDate
+    hasAllMembersCommonDate,
+    targetPeriodInfo
   };
 };

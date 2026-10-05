@@ -115,8 +115,11 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
     }
   }, [members, selectedMember]);
 
-  // Current calendar month view
-  const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+  // Current calendar month view (defaults to next month when day >= 21)
+  const [currentMonth, setCurrentMonth] = useState<Date>(() => {
+    const now = new Date();
+    return now.getDate() >= 21 ? addMonths(now, 1) : now;
+  });
 
   // Show dropdown for member selector
   const [showMemberDropdown, setShowMemberDropdown] = useState(false);
@@ -166,26 +169,31 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
     }
   }, [selectedMember]);
 
-  // Load from localStorage when opening
+  // Load from localStorage and reset month view when opening (Option 1: day >= 21 opens on next month)
   useEffect(() => {
-    if (isOpen && typeof window !== 'undefined') {
-      try {
-        const stored = localStorage.getItem(STORAGE_KEY);
-        if (stored) {
-          const parsed = JSON.parse(stored);
-          const converted: Record<string, Record<string, boolean>> = {};
-          Object.keys(parsed).forEach(mem => {
-            converted[mem] = {};
-            Object.keys(parsed[mem] || {}).forEach(date => {
-              if (parsed[mem][date] === 'available' || parsed[mem][date] === true) {
-                converted[mem][date] = true;
-              }
+    if (isOpen) {
+      const now = new Date();
+      setCurrentMonth(now.getDate() >= 21 ? addMonths(now, 1) : now);
+
+      if (typeof window !== 'undefined') {
+        try {
+          const stored = localStorage.getItem(STORAGE_KEY);
+          if (stored) {
+            const parsed = JSON.parse(stored);
+            const converted: Record<string, Record<string, boolean>> = {};
+            Object.keys(parsed).forEach(mem => {
+              converted[mem] = {};
+              Object.keys(parsed[mem] || {}).forEach(date => {
+                if (parsed[mem][date] === 'available' || parsed[mem][date] === true) {
+                  converted[mem][date] = true;
+                }
+              });
             });
-          });
-          setAvailabilityMap(converted);
+            setAvailabilityMap(converted);
+          }
+        } catch (e) {
+          console.error(e);
         }
-      } catch (e) {
-        console.error(e);
       }
     }
   }, [isOpen]);
