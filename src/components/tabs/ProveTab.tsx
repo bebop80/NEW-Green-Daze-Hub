@@ -84,8 +84,8 @@ export const ProveTab: React.FC<ProveTabProps> = ({
 
   return (
     <div className="flex-1 min-h-0 flex flex-col justify-between gap-2 sm:gap-2.5 overflow-hidden text-white">
-      {/* 1. HERO CARD DETTAGLIO PROSSIMA PROVA: TESTI A TUTTA LARGHEZZA, NESSUN TESTO TAGLIATO */}
-      <div className="flex-1 min-h-0 rounded-3xl p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#181d29] dark:to-[#0f1219] shadow-xl border border-slate-200 dark:border-white/[0.06] transition-colors">
+      {/* 1. HERO CARD DETTAGLIO PROSSIMA PROVA: BORDO ILLUMINATO SOLO IN QUESTA SCHEDA */}
+      <div className="flex-1 min-h-0 rounded-3xl p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#181d29] dark:to-[#0f1219] shadow-xl border border-emerald-500/80 dark:border-[#00e660] shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(0,230,96,0.35)] transition-all">
         {/* Ambient Stage Lighting */}
         <div className="hidden dark:block absolute top-0 right-0 w-64 h-64 bg-brand-green/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
         <div className="hidden dark:block absolute bottom-0 left-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none -ml-16 -mb-16" />
@@ -164,23 +164,17 @@ export const ProveTab: React.FC<ProveTabProps> = ({
                 )}
               </div>
 
-              {/* Turno cassa a tutta larghezza */}
-              <div className="flex items-center justify-between py-1 px-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] shadow-xs">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold">
-                  Tocca Pagare A
+              {/* Turno cassa a tutta larghezza - Tutto su un'unica riga centrata */}
+              <div className="flex items-center justify-center gap-2 py-1.5 px-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] shadow-xs text-center">
+                <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold whitespace-nowrap">
+                  TURNO CASSA PROVA
                 </span>
-                <div className="flex items-center gap-1.5">
-                  <div 
-                    className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
-                    style={{ backgroundColor: isSharedExpense ? '#00e660' : (calcolaTurno?.color || '#00e660') }}
-                  />
-                  <span 
-                    className="font-rock text-lg sm:text-xl uppercase tracking-wider leading-none"
-                    style={{ color: isSharedExpense ? '#00a844' : (calcolaTurno?.color || '#00a844') }}
-                  >
-                    {isSharedExpense ? 'Spesa condivisa' : (calcolaTurno?.name || 'Da definire')}
-                  </span>
-                </div>
+                <span 
+                  className="font-rock text-[20px] uppercase tracking-wider leading-none whitespace-nowrap truncate"
+                  style={{ color: isSharedExpense ? '#00a844' : (calcolaTurno?.color || '#00a844'), fontSize: '20px' }}
+                >
+                  {isSharedExpense ? 'Spesa condivisa' : (calcolaTurno?.name || 'Da definire')}
+                </span>
               </div>
             </div>
 

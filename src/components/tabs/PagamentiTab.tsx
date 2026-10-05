@@ -113,17 +113,19 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
         <div className="flex-1 min-h-0 flex flex-col justify-evenly py-1 sm:py-2 relative z-10 space-y-2 sm:space-y-3">
           {/* Box Chi Tocca Pagare */}
           <div 
-            style={{ height: '70px', paddingTop: '10px', paddingBottom: '10px' }}
-            className="h-[70px] pt-[10px] pb-[10px] px-2.5 sm:px-3.5 rounded-2xl bg-white/90 dark:bg-[#121620]/80 backdrop-blur-md border border-slate-300 dark:border-white/[0.1] shadow-md flex flex-col items-center justify-center text-center gap-0.5"
+            style={{ 
+              height: '70px', 
+              paddingTop: '10px', 
+              paddingBottom: '10px',
+              borderColor: systemPayerColor,
+              boxShadow: `0 0 12px ${systemPayerColor}25`
+            }}
+            className="h-[70px] pt-[10px] pb-[10px] px-2.5 sm:px-3.5 rounded-2xl bg-white/90 dark:bg-[#121620]/80 backdrop-blur-md border shadow-md flex flex-col items-center justify-center text-center gap-0.5 transition-colors"
           >
             <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold block text-center">
               Tocca Pagare A
             </span>
-            <div className="flex items-center justify-center gap-2 mt-0.5 text-center">
-              <div 
-                className="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm"
-                style={{ backgroundColor: systemPayerColor }}
-              />
+            <div className="flex items-center justify-center mt-0.5 text-center">
               <span 
                 className="font-rock uppercase tracking-wider leading-none truncate drop-shadow-sm text-center"
                 style={{ color: systemPayerColor, fontSize: '30px' }}

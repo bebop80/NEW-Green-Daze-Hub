@@ -151,29 +151,20 @@ export const HomeTab: React.FC<HomeTabProps> = ({
                 )}
               </div>
 
-              {/* Turno cassa dedicato a tutta larghezza */}
+              {/* Turno cassa dedicato a tutta larghezza - Tutto su un'unica riga centrata */}
               <div 
                 onClick={() => onNavigateTab('pagamenti')}
-                style={{ paddingTop: '3px', paddingBottom: '8px' }}
-                className="flex items-center justify-between px-3 rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-white/[0.03] dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.06] cursor-pointer transition-colors group shadow-xs"
+                className="flex items-center justify-center gap-2 py-1.5 px-3 rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-white/[0.03] dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.06] cursor-pointer transition-colors group shadow-xs text-center"
               >
-                <div style={{ marginLeft: '0px', paddingLeft: '0px', paddingRight: '50px' }}>
-                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold">
-                    Turno Cassa Prova
-                  </span>
-                </div>
-                <div className="flex items-center gap-1.5">
-                  <div 
-                    className="w-2.5 h-2.5 rounded-full shrink-0 shadow-xs"
-                    style={{ backgroundColor: isSharedExpense ? '#00e660' : (calcolaTurno?.color || '#00e660') }}
-                  />
-                  <span 
-                    className="font-rock text-xl uppercase tracking-wider leading-none group-hover:underline"
-                    style={{ color: isSharedExpense ? '#00a844' : (calcolaTurno?.color || '#00a844') }}
-                  >
-                    {isSharedExpense ? 'Spesa condivisa' : (calcolaTurno?.name || '--')}
-                  </span>
-                </div>
+                <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold whitespace-nowrap">
+                  TURNO CASSA PROVA
+                </span>
+                <span 
+                  className="font-rock text-[20px] uppercase tracking-wider leading-none group-hover:underline whitespace-nowrap truncate"
+                  style={{ color: isSharedExpense ? '#00a844' : (calcolaTurno?.color || '#00a844'), fontSize: '20px' }}
+                >
+                  {isSharedExpense ? 'Spesa condivisa' : (calcolaTurno?.name || '--')}
+                </span>
               </div>
             </div>
 
