@@ -323,11 +323,11 @@ const App = () => {
   }
 
   return (
-    <div className="h-[100dvh] w-full bg-[#f1f5f9] dark:bg-[#121620] transition-colors duration-300 relative overflow-hidden select-none flex flex-col justify-center items-center">
+    <div className="min-h-[100dvh] h-[100dvh] w-full bg-[#f1f5f9] dark:bg-[#121620] transition-colors duration-300 relative overflow-hidden select-none flex flex-col justify-center items-center">
       <PunkBackground theme={theme} />
 
       {/* Sleek App Frame: Consistent, refined proportions on smartphone, tablet and PC */}
-      <div className="relative z-10 h-full w-full max-w-[430px] mx-auto flex flex-col justify-between overflow-hidden md:h-[94vh] md:max-h-[850px] md:rounded-3xl md:border md:border-slate-300 md:dark:border-white/[0.08] md:shadow-2xl md:shadow-slate-400/30 md:dark:shadow-black/70 bg-white/95 dark:bg-[#0f1219]/95 backdrop-blur-md transition-colors">
+      <div className="relative z-10 h-full w-full max-w-[430px] mx-auto flex flex-col justify-between overflow-hidden md:h-[95vh] md:max-h-[880px] md:rounded-3xl md:border md:border-slate-300 md:dark:border-white/[0.08] md:shadow-2xl md:shadow-slate-400/30 md:dark:shadow-black/70 bg-white/95 dark:bg-[#0f1219]/95 backdrop-blur-md transition-colors">
         {/* Top Header: Horizontal Band Name + Theme + Sync + Settings */}
         <AppHeader
           theme={theme}
@@ -337,7 +337,7 @@ const App = () => {
         />
 
         {/* Main Tab Screen Area: Zero Scroll Viewport-Fit */}
-        <main className="flex-1 min-h-0 overflow-hidden relative px-3 sm:px-4 py-2 flex flex-col">
+        <main className="flex-1 min-h-0 overflow-hidden relative px-3 sm:px-4 py-1.5 sm:py-2 flex flex-col">
           <AnimatePresence mode="wait">
             {activeTab === 'home' && (
               <motion.div

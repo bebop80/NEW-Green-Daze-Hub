@@ -83,15 +83,15 @@ export const ProveTab: React.FC<ProveTabProps> = ({
   };
 
   return (
-    <div className="flex-1 min-h-0 flex flex-col justify-between gap-2.5 overflow-hidden text-white">
+    <div className="flex-1 min-h-0 flex flex-col justify-between gap-2 sm:gap-2.5 overflow-hidden text-white">
       {/* 1. HERO CARD DETTAGLIO PROSSIMA PROVA: TESTI A TUTTA LARGHEZZA, NESSUN TESTO TAGLIATO */}
-      <div className="flex-1 min-h-0 rounded-3xl p-4 sm:p-5 flex flex-col justify-between relative overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#181d29] dark:to-[#0f1219] shadow-xl border border-slate-200 dark:border-white/[0.06] transition-colors">
+      <div className="flex-1 min-h-0 rounded-3xl p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#181d29] dark:to-[#0f1219] shadow-xl border border-slate-200 dark:border-white/[0.06] transition-colors">
         {/* Ambient Stage Lighting */}
         <div className="hidden dark:block absolute top-0 right-0 w-64 h-64 bg-brand-green/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
         <div className="hidden dark:block absolute bottom-0 left-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none -ml-16 -mb-16" />
 
         {/* Top Header: Completamente scoperto e visibile */}
-        <div className="flex items-center justify-between gap-2 relative z-20 flex-shrink-0 pb-1">
+        <div className="flex items-center justify-between gap-2 relative z-20 flex-shrink-0 pb-0.5">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-emerald-600 dark:bg-brand-green shadow-xs dark:shadow-[0_0_8px_#00e660]" />
             <h2 className="text-[11px] font-mono tracking-widest text-emerald-700 dark:text-brand-green font-bold uppercase">
@@ -109,9 +109,9 @@ export const ProveTab: React.FC<ProveTabProps> = ({
         </div>
 
         {hasNext && nextDateObj ? (
-          <div className="flex-1 flex flex-col justify-between relative z-10">
+          <div className="flex-1 flex flex-col justify-between relative z-10 min-h-0">
             {/* SEZIONE DATA E ORA: PARTE PULITO SOTTO L'HEADER E SCENDE A FILO DELLA LINEA IN BASSO */}
-            <div className="relative -mx-4 sm:-mx-5 mt-2 px-4 sm:px-5 py-4 flex-1 flex flex-col justify-center overflow-hidden border-b border-slate-200 dark:border-white/[0.1] shadow-inner">
+            <div className="relative -mx-3 sm:-mx-4 mt-1 px-3 sm:px-4 py-2 sm:py-3 flex-1 flex flex-col justify-center overflow-hidden border-b border-slate-200 dark:border-white/[0.1] shadow-inner">
               {/* Foto dello Sfondo Palco in Bianco, Nero e Grigi per differenziare la scheda Prove dalla Home */}
               <img 
                 src={stageBg} 
@@ -127,10 +127,9 @@ export const ProveTab: React.FC<ProveTabProps> = ({
               <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-transparent to-black/60 pointer-events-none" />
 
               {/* Data e Orario in primo piano ALLINEATI AL CENTRO */}
-              <div className="relative z-10 space-y-2.5 flex flex-col items-center justify-center text-center">
+              <div className="relative z-10 space-y-1.5 flex flex-col items-center justify-center text-center">
                 <div 
-                  className="font-rock text-white tracking-wide uppercase leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,1)] text-shadow text-center"
-                  style={{ fontSize: '32px' }}
+                  className="font-rock text-white tracking-wide uppercase leading-tight drop-shadow-[0_2px_12px_rgba(0,0,0,1)] text-shadow text-center text-2xl sm:text-[28px]"
                 >
                   {format(nextDateObj, 'EEEE d MMMM', { locale: it })}
                 </div>
@@ -138,10 +137,9 @@ export const ProveTab: React.FC<ProveTabProps> = ({
                 {(data?.next?.from || data?.next?.to) && (
                   <div className="flex justify-center">
                     <div 
-                      className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-600 text-white dark:bg-brand-green dark:text-black font-rock tracking-wider uppercase shadow-md shadow-emerald-900/20 dark:shadow-brand-green/40 drop-shadow-md"
-                      style={{ fontSize: '18px' }}
+                      className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-lg sm:rounded-xl bg-emerald-600 text-white dark:bg-brand-green dark:text-black font-rock tracking-wider uppercase shadow-md shadow-emerald-900/20 dark:shadow-brand-green/40 drop-shadow-md text-sm sm:text-base"
                     >
-                      <Clock size={16} />
+                      <Clock size={15} />
                       <span>{data.next.from} {data.next.to && `— ${data.next.to}`}</span>
                     </div>
                   </div>
@@ -150,24 +148,24 @@ export const ProveTab: React.FC<ProveTabProps> = ({
             </div>
 
             {/* SEZIONE SALA PROVE & TURNO CASSA (SFIORE LA PARTE BASSA DELLO SFONDO) */}
-            <div className="pt-2.5 space-y-2">
+            <div className="pt-1.5 sm:pt-2 space-y-1.5">
               {/* Sala Prove a tutta larghezza: non viene mai tagliato */}
               <div>
                 <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold block">
                   Sala Prove
                 </span>
-                <div className="font-display font-black text-sm sm:text-base text-slate-900 dark:text-white mt-0.5 leading-snug break-words">
+                <div className="font-display font-black text-sm text-slate-900 dark:text-white mt-0.5 leading-snug break-words">
                   {roomObj?.name || 'Da definire'}
                 </div>
                 {roomObj?.address && (
-                  <div className="text-xs text-slate-600 dark:text-zinc-400 mt-0.5 leading-normal break-words">
+                  <div className="text-[11px] sm:text-xs text-slate-600 dark:text-zinc-400 mt-0.5 leading-tight break-words">
                     {roomObj.address}
                   </div>
                 )}
               </div>
 
               {/* Turno cassa a tutta larghezza */}
-              <div className="flex items-center justify-between py-1.5 px-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] shadow-xs">
+              <div className="flex items-center justify-between py-1 px-3 rounded-xl bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] shadow-xs">
                 <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold">
                   Tocca Pagare A
                 </span>
@@ -177,7 +175,7 @@ export const ProveTab: React.FC<ProveTabProps> = ({
                     style={{ backgroundColor: isSharedExpense ? '#00e660' : (calcolaTurno?.color || '#00e660') }}
                   />
                   <span 
-                    className="font-rock text-xl uppercase tracking-wider leading-none"
+                    className="font-rock text-lg sm:text-xl uppercase tracking-wider leading-none"
                     style={{ color: isSharedExpense ? '#00a844' : (calcolaTurno?.color || '#00a844') }}
                   >
                     {isSharedExpense ? 'Spesa condivisa' : (calcolaTurno?.name || 'Da definire')}
@@ -187,7 +185,7 @@ export const ProveTab: React.FC<ProveTabProps> = ({
             </div>
 
             {/* 3 Quick Action Buttons */}
-            <div className="grid grid-cols-3 gap-2" style={{ paddingTop: '9px' }}>
+            <div className="grid grid-cols-3 gap-2 pt-1.5 sm:pt-2">
               {roomObj?.address ? (
                 <a
                   href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(roomObj.address)}`}
