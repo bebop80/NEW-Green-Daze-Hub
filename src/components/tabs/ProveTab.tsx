@@ -30,6 +30,8 @@ interface ProveTabProps {
   apiAction: (type: string, payload: any) => Promise<boolean>;
   shareInfo: (text: string, platform: 'wa' | 'tg') => void;
   formatRehearsalForShare: (r: any) => string;
+  availableMembers?: Member[];
+  hasAllMembersCommonDate?: boolean;
 }
 
 export const ProveTab: React.FC<ProveTabProps> = ({
@@ -41,7 +43,9 @@ export const ProveTab: React.FC<ProveTabProps> = ({
   onOpenAvailability,
   apiAction,
   shareInfo,
-  formatRehearsalForShare
+  formatRehearsalForShare,
+  availableMembers = [],
+  hasAllMembersCommonDate = false
 }) => {
   const [calendarItem, setCalendarItem] = useState<CalendarEventItem | null>(null);
   const [showFutureListModal, setShowFutureListModal] = useState(false);
@@ -240,7 +244,55 @@ export const ProveTab: React.FC<ProveTabProps> = ({
         )}
       </div>
 
-      {/* 2. CARD DISPONIBILITÀ BAND: ORA SOPRA A PROVE FUTURE, SENZA TRASPARENZA, LOOK IDENTICO ALLE ALTRE CARD */}
+      {/* 2. NOTE DELLA BAND: SUBITO SOTTO A DETTAGLIO SESSIONE E SOPRA A DISPONIBILITÀ BAND */}
+      {rawNotes ? (
+        <div className="flex-shrink-0 rounded-2xl p-3 bg-white dark:bg-gradient-to-b dark:from-[#181d29] dark:to-[#0f1219] border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-xl flex flex-col justify-between">
+          <div className="flex items-center justify-between gap-2 mb-1.5">
+            <div className="flex items-center gap-2">
+              <MessageSquare size={15} className="text-emerald-600 dark:text-brand-green" />
+              <span className="font-rock text-xs uppercase tracking-wider text-slate-900 dark:text-white">
+                NOTE DELLA BAND
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => setShowEditNotesModal(true)}
+                className="py-1 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:border-white/[0.08] dark:bg-white/[0.05] dark:hover:bg-white/[0.1] font-rock text-xs tracking-wider uppercase text-emerald-700 dark:text-brand-green flex items-center gap-1 cursor-pointer active:scale-95 shadow-xs"
+              >
+                <Pencil size={11} />
+                <span>Modifica</span>
+              </button>
+
+              <button
+                onClick={() => handleSaveNotes('')}
+                className="w-6 h-6 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 dark:bg-red-500/10 dark:hover:bg-red-500/20 dark:text-red-400 dark:border-red-500/30 cursor-pointer active:scale-95 shadow-xs"
+                title="Cancella note"
+              >
+                <Trash2 size={12} />
+              </button>
+            </div>
+          </div>
+
+          <div className="bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] rounded-xl p-2.5 flex items-center shadow-xs">
+            <p className="text-xs text-slate-800 dark:text-white font-medium italic line-clamp-2">
+              "{rawNotes}"
+            </p>
+          </div>
+        </div>
+      ) : (
+        <div className="flex-shrink-0">
+          <button
+            onClick={() => setShowEditNotesModal(true)}
+            className="w-full py-2.5 px-3 rounded-xl bg-white dark:bg-white/[0.03] hover:bg-slate-50 dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.06] hover:border-emerald-600/40 dark:hover:border-brand-green/40 text-xs font-mono font-bold text-slate-600 dark:text-zinc-400 hover:text-emerald-700 dark:hover:text-brand-green flex items-center justify-center gap-1.5 cursor-pointer transition-all active:scale-98 shadow-xs"
+          >
+            <Plus size={14} className="text-emerald-600 dark:text-brand-green" />
+            <span>Aggiungi Note Band</span>
+          </button>
+        </div>
+      )}
+
+      {/* 3. CARD DISPONIBILITÀ BAND */}
       <div 
         onClick={onOpenAvailability}
         className="flex-shrink-0 rounded-2xl p-3.5 bg-white dark:bg-gradient-to-r dark:from-[#181d29] dark:to-[#12151e] border border-slate-200 dark:border-white/[0.06] hover:border-emerald-600/40 dark:hover:border-brand-green/40 shadow-sm dark:shadow-xl flex items-center justify-between gap-2 cursor-pointer group transition-all"
@@ -253,9 +305,37 @@ export const ProveTab: React.FC<ProveTabProps> = ({
             <span className="font-rock text-sm sm:text-base tracking-wider uppercase text-slate-900 dark:text-white group-hover:text-emerald-700 dark:group-hover:text-brand-green transition-colors block leading-tight">
               DISPONIBILITÀ BAND
             </span>
-            <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
-              Verifica impegni e sync calendari
-            </p>
+            {availableMembers && availableMembers.length > 0 ? (
+              <div className="flex items-center gap-1.5 mt-1 min-w-0 flex-wrap">
+                {availableMembers.map((m) => (
+                  <span
+                    key={m.name}
+                    style={{
+                      backgroundColor: `${m.color}25`,
+                      color: m.color,
+                      borderColor: `${m.color}60`
+                    }}
+                    className="w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-mono font-black border shrink-0 shadow-2xs leading-none"
+                    title={`${m.name}: preferenze inserite`}
+                  >
+                    {m.name.charAt(0).toUpperCase()}
+                  </span>
+                ))}
+
+                {hasAllMembersCommonDate && (
+                  <span 
+                    className="text-base select-none shrink-0 ml-0.5 filter drop-shadow-[0_0_8px_#00e660] dark:drop-shadow-[0_0_12px_#00e660]" 
+                    title="Giorno compatibile con tutta la band!"
+                  >
+                    🤘
+                  </span>
+                )}
+              </div>
+            ) : (
+              <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate mt-0.5">
+                Nessuna preferenza inserita
+              </p>
+            )}
           </div>
         </div>
 
@@ -265,7 +345,7 @@ export const ProveTab: React.FC<ProveTabProps> = ({
         </div>
       </div>
 
-      {/* 3. CARD PROVE FUTURE: SUBITO SOTTO A DISPONIBILITÀ BAND */}
+      {/* 4. CARD PROVE FUTURE: SUBITO SOTTO A DISPONIBILITÀ BAND */}
       <div className="flex-shrink-0 rounded-2xl p-3.5 bg-white dark:bg-gradient-to-r dark:from-[#181d29] dark:to-[#12151e] border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-xl flex items-center justify-between gap-2">
         <div className="flex items-center gap-2.5 min-w-0">
           <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-white/[0.04] border border-slate-200 dark:border-white/[0.08] flex items-center justify-center text-emerald-600 dark:text-brand-green shrink-0 shadow-xs">
@@ -312,54 +392,6 @@ export const ProveTab: React.FC<ProveTabProps> = ({
           )}
         </div>
       </div>
-
-      {/* 4. NOTE DELLA BAND: SE NON CI SONO MOSTRA SOLO IL TASTO AGGIUNGI */}
-      {rawNotes ? (
-        <div className="flex-shrink-0 rounded-2xl p-3 bg-white dark:bg-gradient-to-b dark:from-[#181d29] dark:to-[#0f1219] border border-slate-200 dark:border-white/[0.06] shadow-sm dark:shadow-xl flex flex-col justify-between">
-          <div className="flex items-center justify-between gap-2 mb-1.5">
-            <div className="flex items-center gap-2">
-              <MessageSquare size={15} className="text-emerald-600 dark:text-brand-green" />
-              <span className="font-rock text-xs uppercase tracking-wider text-slate-900 dark:text-white">
-                NOTE DELLA BAND
-              </span>
-            </div>
-
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => setShowEditNotesModal(true)}
-                className="py-1 px-2.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 dark:border-white/[0.08] dark:bg-white/[0.05] dark:hover:bg-white/[0.1] font-rock text-xs tracking-wider uppercase text-emerald-700 dark:text-brand-green flex items-center gap-1 cursor-pointer active:scale-95 shadow-xs"
-              >
-                <Pencil size={11} />
-                <span>Modifica</span>
-              </button>
-
-              <button
-                onClick={() => handleSaveNotes('')}
-                className="w-6 h-6 flex items-center justify-center rounded-lg bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 dark:bg-red-500/10 dark:hover:bg-red-500/20 dark:text-red-400 dark:border-red-500/30 cursor-pointer active:scale-95 shadow-xs"
-                title="Cancella note"
-              >
-                <Trash2 size={12} />
-              </button>
-            </div>
-          </div>
-
-          <div className="bg-slate-50 dark:bg-white/[0.03] border border-slate-200 dark:border-white/[0.06] rounded-xl p-2.5 flex items-center shadow-xs">
-            <p className="text-xs text-slate-800 dark:text-white font-medium italic line-clamp-2">
-              "{rawNotes}"
-            </p>
-          </div>
-        </div>
-      ) : (
-        <div className="flex-shrink-0">
-          <button
-            onClick={() => setShowEditNotesModal(true)}
-            className="w-full py-2.5 px-3 rounded-xl bg-white dark:bg-white/[0.03] hover:bg-slate-50 dark:hover:bg-white/[0.06] border border-slate-200 dark:border-white/[0.06] hover:border-emerald-600/40 dark:hover:border-brand-green/40 text-xs font-mono font-bold text-slate-600 dark:text-zinc-400 hover:text-emerald-700 dark:hover:text-brand-green flex items-center justify-center gap-1.5 cursor-pointer transition-all active:scale-98 shadow-xs"
-          >
-            <Plus size={14} className="text-emerald-600 dark:text-brand-green" />
-            <span>+ Aggiungi Note Band</span>
-          </button>
-        </div>
-      )}
 
       {/* Modals */}
       <CalendarExportModal item={calendarItem} onClose={() => setCalendarItem(null)} />

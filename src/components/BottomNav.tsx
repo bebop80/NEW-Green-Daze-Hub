@@ -9,13 +9,15 @@ interface BottomNavProps {
   setActiveTab: (tab: TabType) => void;
   nextHasNotes?: boolean;
   upcomingConcertsCount?: number;
+  availableMembersCount?: number;
 }
 
 export const BottomNav: React.FC<BottomNavProps> = ({
   activeTab,
   setActiveTab,
   nextHasNotes,
-  upcomingConcertsCount = 0
+  upcomingConcertsCount = 0,
+  availableMembersCount = 0
 }) => {
   const tabs = [
     {
@@ -28,7 +30,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       id: 'prove' as TabType,
       label: 'PROVE',
       icon: Music,
-      badge: null
+      badge: availableMembersCount > 0 ? String(availableMembersCount) : null
     },
     {
       id: 'pagamenti' as TabType,

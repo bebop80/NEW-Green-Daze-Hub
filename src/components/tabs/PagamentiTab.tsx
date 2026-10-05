@@ -112,18 +112,21 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
         {/* Body Fields */}
         <div className="flex-1 min-h-0 flex flex-col justify-evenly py-1 sm:py-2 relative z-10 space-y-2 sm:space-y-3">
           {/* Box Chi Tocca Pagare */}
-          <div className="p-2.5 sm:p-3.5 rounded-2xl bg-white/90 dark:bg-[#121620]/80 backdrop-blur-md border border-slate-300 dark:border-white/[0.1] shadow-md flex flex-col items-center justify-center text-center gap-0.5 sm:gap-1">
+          <div 
+            style={{ height: '70px', paddingTop: '10px', paddingBottom: '10px' }}
+            className="h-[70px] pt-[10px] pb-[10px] px-2.5 sm:px-3.5 rounded-2xl bg-white/90 dark:bg-[#121620]/80 backdrop-blur-md border border-slate-300 dark:border-white/[0.1] shadow-md flex flex-col items-center justify-center text-center gap-0.5"
+          >
             <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-bold block text-center">
               Tocca Pagare A
             </span>
             <div className="flex items-center justify-center gap-2 mt-0.5 text-center">
               <div 
-                className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full shrink-0 shadow-sm"
+                className="w-3.5 h-3.5 rounded-full shrink-0 shadow-sm"
                 style={{ backgroundColor: systemPayerColor }}
               />
               <span 
-                className="font-rock text-xl sm:text-2xl uppercase tracking-wider leading-none truncate drop-shadow-sm text-center"
-                style={{ color: systemPayerColor }}
+                className="font-rock uppercase tracking-wider leading-none truncate drop-shadow-sm text-center"
+                style={{ color: systemPayerColor, fontSize: '30px' }}
               >
                 {systemPayerName || '--'}
               </span>
@@ -132,7 +135,10 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
 
           {/* Menù a tendina per cambiare chi paga */}
           <div>
-            <label className="text-[10px] font-mono uppercase text-slate-700 dark:text-zinc-300 font-bold block mb-1 drop-shadow-xs">
+            <label 
+              style={{ paddingTop: '0px' }}
+              className="text-[10px] font-mono uppercase text-slate-700 dark:text-zinc-300 font-bold block mb-1 pt-0 drop-shadow-xs"
+            >
               Chi paga
             </label>
 
@@ -140,8 +146,8 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
               <select
                 value={selectedPayer}
                 onChange={(e) => setSelectedPayer(e.target.value)}
-                style={{ color: activePayerColor }}
-                className="w-full h-10 sm:h-11 px-3 sm:px-3.5 pr-10 rounded-xl bg-white/95 dark:bg-[#121620]/85 backdrop-blur-md border border-slate-300 dark:border-white/[0.12] text-sm sm:text-base font-rock uppercase tracking-wider outline-none focus:border-emerald-600 dark:focus:border-brand-green appearance-none cursor-pointer shadow-xs"
+                style={{ color: activePayerColor, height: '50.6px', fontSize: '20px' }}
+                className="w-full h-[50.6px] px-3 sm:px-3.5 pr-10 rounded-xl bg-white/95 dark:bg-[#121620]/85 backdrop-blur-md border border-slate-300 dark:border-white/[0.12] text-[20px] font-rock uppercase tracking-wider outline-none focus:border-emerald-600 dark:focus:border-brand-green appearance-none cursor-pointer shadow-xs"
               >
                 <option value="" className="bg-white dark:bg-[#121620] text-slate-400 dark:text-zinc-400">
                   Seleziona pagatore...
@@ -177,7 +183,8 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
                 type="date"
                 value={paymentDate}
                 onChange={(e) => setPaymentDate(e.target.value)}
-                className="w-full h-10 sm:h-11 px-3 sm:px-3.5 pr-10 rounded-xl bg-white/95 dark:bg-[#121620]/85 backdrop-blur-md border border-slate-300 dark:border-white/[0.12] text-xs sm:text-sm font-mono font-bold text-slate-900 dark:text-white outline-none focus:border-emerald-600 dark:focus:border-brand-green [color-scheme:light] dark:[color-scheme:dark] shadow-xs cursor-pointer custom-picker-input"
+                style={{ fontSize: '14px' }}
+                className="w-full h-10 sm:h-11 px-3 sm:px-3.5 pr-10 rounded-xl bg-white/95 dark:bg-[#121620]/85 backdrop-blur-md border border-slate-300 dark:border-white/[0.12] text-[14px] font-mono font-bold text-slate-900 dark:text-white outline-none focus:border-emerald-600 dark:focus:border-brand-green [color-scheme:light] dark:[color-scheme:dark] shadow-xs cursor-pointer custom-picker-input"
               />
               <div className="absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none text-emerald-600 dark:text-brand-green flex items-center justify-center">
                 <Calendar size={18} className="text-emerald-600 dark:text-brand-green drop-shadow-xs dark:drop-shadow-[0_0_8px_#00e660]" />

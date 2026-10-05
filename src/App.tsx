@@ -5,6 +5,7 @@ import { it } from 'date-fns/locale';
 import { Eye } from 'lucide-react';
 
 import { useAppData } from './hooks/useAppData';
+import { useBandAvailability } from './hooks/useBandAvailability';
 import { Rehearsal, FutureRehearsal, Concert } from './types';
 import { safeParseLocal } from './lib/utils';
 
@@ -57,6 +58,12 @@ const App = () => {
     calcolaTurno,
     apiAction
   } = useAppData();
+
+  const {
+    availableMembers,
+    availableMembersCount,
+    hasAllMembersCommonDate
+  } = useBandAvailability(data?.members);
 
   // Tab State: 'home' | 'prove' | 'pagamenti' | 'concerti'
   const [activeTab, setActiveTab] = useState<TabType>('home');
@@ -372,6 +379,8 @@ const App = () => {
                   apiAction={apiAction}
                   shareInfo={shareInfo}
                   formatRehearsalForShare={formatRehearsalForShare}
+                  availableMembers={availableMembers}
+                  hasAllMembersCommonDate={hasAllMembersCommonDate}
                 />
               </motion.div>
             )}
@@ -426,6 +435,7 @@ const App = () => {
           setActiveTab={setActiveTab}
           nextHasNotes={nextHasNotes}
           upcomingConcertsCount={upcomingConcertsCount}
+          availableMembersCount={availableMembersCount}
         />
       </div>
 
