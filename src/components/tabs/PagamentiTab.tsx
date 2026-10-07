@@ -105,7 +105,7 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
             className="text-[11px] font-mono tracking-wider uppercase text-slate-600 dark:text-zinc-400 hover:text-emerald-700 dark:hover:text-brand-green transition-colors cursor-pointer flex items-center gap-1 py-1 px-2"
           >
             <Plus size={13} className="text-emerald-600 dark:text-brand-green" />
-            <span>Nuovo Membro</span>
+            <span>Membri / Colori</span>
           </button>
         </div>
 

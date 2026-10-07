@@ -85,7 +85,7 @@ export const ProveTab: React.FC<ProveTabProps> = ({
   return (
     <div className="flex-1 min-h-0 flex flex-col justify-between gap-2 sm:gap-2.5 overflow-hidden text-white">
       {/* 1. HERO CARD DETTAGLIO PROSSIMA PROVA: BORDO ILLUMINATO SOLO IN QUESTA SCHEDA */}
-      <div className="flex-1 min-h-0 rounded-3xl p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#181d29] dark:to-[#0f1219] shadow-xl border border-emerald-500/80 dark:border-[#00e660] shadow-emerald-500/20 dark:shadow-[0_0_20px_rgba(0,230,96,0.35)] transition-all">
+      <div className="flex-1 min-h-0 rounded-3xl p-3 sm:p-4 flex flex-col justify-between relative overflow-hidden bg-white dark:bg-gradient-to-b dark:from-[#181d29] dark:to-[#0f1219] shadow-xl border border-emerald-500/80 dark:border-[#00e660] shadow-[0_0_20px_rgba(0,230,96,0.35)] transition-all">
         {/* Ambient Stage Lighting */}
         <div className="hidden dark:block absolute top-0 right-0 w-64 h-64 bg-brand-green/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20" />
         <div className="hidden dark:block absolute bottom-0 left-0 w-48 h-48 bg-emerald-500/5 rounded-full blur-2xl pointer-events-none -ml-16 -mb-16" />

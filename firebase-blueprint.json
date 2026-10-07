@@ -23,12 +23,32 @@
         }
       },
       "required": ["memberId", "memberName", "dates", "updatedAt"]
+    },
+    "MemberColors": {
+      "title": "Member Colors",
+      "description": "Custom color assignments for band members",
+      "type": "object",
+      "properties": {
+        "colors": {
+          "type": "object",
+          "description": "Map of member name to hex color"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "ISO timestamp of last update"
+        }
+      },
+      "required": ["colors", "updatedAt"]
     }
   },
   "firestore": {
     "/member_availability/{memberId}": {
       "schema": "MemberAvailability",
       "description": "Stores individual member availability dates"
+    },
+    "/member_colors/{colorDoc}": {
+      "schema": "MemberColors",
+      "description": "Stores customized member colors for the band"
     }
   }
 }

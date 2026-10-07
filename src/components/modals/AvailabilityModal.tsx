@@ -65,6 +65,20 @@ const WEEKDAY_ITEMS = [
   { label: 'Dom', dayIndex: 0 },
 ];
 
+// Helper to determine crisp high-contrast text color for member badges
+const getBadgeTextColor = (hexColor?: string) => {
+  if (!hexColor) return '#000000';
+  const clean = hexColor.replace('#', '');
+  if (clean.length === 6) {
+    const r = parseInt(clean.substring(0, 2), 16);
+    const g = parseInt(clean.substring(2, 4), 16);
+    const b = parseInt(clean.substring(4, 6), 16);
+    const yiq = (r * 299 + g * 587 + b * 114) / 1000;
+    return yiq >= 135 ? '#000000' : '#ffffff';
+  }
+  return '#000000';
+};
+
 interface AvailabilityModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -491,145 +505,143 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
         animate={{ scale: 1, opacity: 1, y: 0 }}
         exit={{ scale: 0.95, opacity: 0, y: 10 }}
         transition={{ duration: 0.18 }}
-        className="glass-card w-full max-w-[460px] sm:max-w-[480px] p-4 sm:p-5 border-brand-green/30 relative text-text-primary shadow-2xl flex flex-col my-auto"
+        className="glass-card w-full max-w-[460px] sm:max-w-[480px] p-3.5 sm:p-5 border-brand-green/30 relative text-text-primary shadow-2xl flex flex-col my-auto rounded-2xl sm:rounded-3xl overflow-hidden"
         onClick={e => e.stopPropagation()}
       >
-        {/* Header - Resembling the screenshot closely */}
-        <div className="flex items-center justify-between pb-2.5 border-b border-brand-border/60">
-          <div className="flex items-center gap-2.5 min-w-0">
-            {/* Calendar Icon Button */}
-            <div className="w-10 h-10 rounded-xl bg-brand-dark border border-brand-border/80 flex items-center justify-center text-brand-green shadow-inner shrink-0">
-              <CalendarIcon size={20} className="text-brand-green" />
+        {/* Header: Titolo a sinistra, Selettore Membro al centro/destra, Tasto Chiudi */}
+        <div className="flex items-center justify-between pb-2.5 border-b border-brand-border/60 gap-2 w-full min-w-0">
+          {/* Titolo e Icona Calendario */}
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-brand-dark border border-brand-border/80 flex items-center justify-center text-brand-green shadow-inner shrink-0">
+              <CalendarIcon size={17} className="text-brand-green" />
             </div>
 
             <div className="min-w-0">
-              <span className="text-[10px] font-mono font-bold tracking-widest text-text-secondary uppercase block leading-none">
+              <span className="text-[12px] font-mono font-bold tracking-widest text-text-secondary uppercase block leading-none">
                 CALENDARIO
               </span>
-              <h3 className="font-display font-black uppercase text-lg sm:text-xl tracking-tight text-brand-green leading-tight">
+              <h3 className="font-display font-black uppercase text-[14px] tracking-tight text-brand-green leading-tight truncate">
                 DISPONIBILITÀ
               </h3>
-              <div 
-                className="flex items-center gap-1.5 leading-none pt-1 select-none"
-                title="Sincronizzato in tempo reale su tutti i dispositivi via Cloud Firestore"
-              >
-                <Cloud size={12} className={cn("shrink-0", isSavedFeedback ? "text-emerald-400" : "text-brand-green")} />
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider leading-none">
-                  {isSavedFeedback ? (
-                    <span className="text-emerald-400 font-black">SALVATO ✓</span>
-                  ) : (
-                    <span className="text-text-secondary">CLOUD LIVE</span>
-                  )}
-                </span>
-              </div>
             </div>
           </div>
 
-          <button 
-            onClick={onClose}
-            className="w-9 h-9 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 rounded-xl transition-colors cursor-pointer shrink-0 ml-2"
-            aria-label="Chiudi"
-          >
-            <X size={20} />
-          </button>
+          {/* Destra: Selettore Membro compatto + Tasto X di chiusura */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            {/* Selettore Membro nell'header (nome completo, mai troncato) */}
+            <div className="relative" ref={dropdownRef}>
+              <button
+                onClick={() => setShowMemberDropdown(!showMemberDropdown)}
+                className="h-[32px] px-2.5 py-0.5 rounded-full bg-brand-dark hover:bg-white/5 border border-brand-border/80 hover:border-brand-green/60 text-text-primary flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 shrink-0 whitespace-nowrap"
+                title="Cambia membro attivo"
+              >
+                <User size={12} className="text-text-secondary shrink-0" />
+                <span 
+                  className="w-2 h-2 rounded-full shrink-0 shadow-[0_0_6px_currentColor]"
+                  style={{ 
+                    backgroundColor: currentMemberObj.color || '#00e660', 
+                    color: currentMemberObj.color || '#00e660' 
+                  }} 
+                />
+                <span className="font-display font-black text-[11px] uppercase tracking-wider text-text-primary whitespace-nowrap">
+                  {selectedMember}
+                </span>
+              </button>
+
+              {/* Dropdown Menu with Member Options */}
+              <AnimatePresence>
+                {showMemberDropdown && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -6, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -6, scale: 0.95 }}
+                    transition={{ duration: 0.12 }}
+                    className="absolute right-0 top-full mt-1.5 z-50 min-w-[180px] w-auto bg-brand-card border border-brand-border rounded-2xl p-1.5 shadow-2xl backdrop-blur-xl whitespace-nowrap"
+                  >
+                    <div className="text-[9px] font-mono font-bold uppercase text-text-secondary px-2.5 py-1 border-b border-brand-border/40">
+                      Seleziona Membro:
+                    </div>
+                    <div className="space-y-0.5 mt-1 max-h-48 overflow-y-auto">
+                      {members.map(m => (
+                        <button
+                          key={m.name}
+                          onClick={() => {
+                            setSelectedMember(m.name);
+                            setShowMemberDropdown(false);
+                          }}
+                          className={cn(
+                            "w-full text-left px-2.5 py-2 rounded-xl text-xs font-bold flex items-center justify-between transition-colors cursor-pointer",
+                            selectedMember === m.name
+                              ? "bg-brand-green/15 text-brand-green"
+                              : "hover:bg-white/5 text-text-primary"
+                          )}
+                        >
+                          <div className="flex items-center gap-2">
+                            <span 
+                              className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm"
+                              style={{ backgroundColor: m.color || '#00e660' }}
+                            />
+                            <span className="font-display font-black uppercase text-xs whitespace-nowrap">{m.name}</span>
+                          </div>
+                          {selectedMember === m.name && <Check size={14} className="text-brand-green" />}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            <button 
+              onClick={onClose}
+              className="w-8 h-8 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-white/10 rounded-lg transition-colors cursor-pointer shrink-0"
+              aria-label="Chiudi"
+            >
+              <X size={18} />
+            </button>
+          </div>
         </div>
 
-        {/* Top Controls Row: [Member Selector Pill] (left), [Giorni Ricorrenti Pill] (center), [Clear Button] (right) - Equidistanti */}
-        <div className="pt-2 pb-1.5 flex items-center justify-between relative w-full">
-          {/* 1. Nome Membro Pill (All'estrema sinistra) */}
-          <div className="flex justify-start min-w-0" ref={dropdownRef}>
-            <button
-              onClick={() => setShowMemberDropdown(!showMemberDropdown)}
-              className="h-[34px] px-2.5 py-1 rounded-full bg-brand-dark/90 hover:bg-brand-dark border border-brand-border/80 hover:border-brand-green/60 text-text-primary flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95"
-            >
-              <User size={13} className="text-text-secondary shrink-0" />
-              {/* Colored Dot of user */}
-              <span 
-                className="w-2 h-2 rounded-full shrink-0 shadow-[0_0_6px_currentColor]"
-                style={{ 
-                  backgroundColor: currentMemberObj.color || '#00e660', 
-                  color: currentMemberObj.color || '#00e660' 
-                }} 
-              />
-              <span className="font-display font-black text-[11.5px] uppercase tracking-wider text-text-primary truncate">
-                {selectedMember}
-              </span>
-            </button>
+        {/* Toolbar Azioni Sotto: [Giorni Ricorrenti] e icona cancellazione affiancati */}
+        <div className="pt-2 pb-1.5 flex items-center gap-2 relative w-full">
+          {/* Giorni Ricorrenti Button */}
+          <button
+            onClick={() => setShowRecurringPanel(!showRecurringPanel)}
+            className={cn(
+              "h-[34px] px-3 py-1 rounded-full border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 shrink-0 whitespace-nowrap",
+              showRecurringPanel
+                ? "bg-brand-green/20 border-brand-green text-brand-green"
+                : "bg-brand-dark/90 hover:bg-brand-dark border-brand-border/80 hover:border-brand-green/50 text-text-primary"
+            )}
+          >
+            <Repeat size={13} className="text-brand-green shrink-0" />
+            <span className="font-display font-black text-[12px] uppercase tracking-normal">
+              Giorni Ricorrenti
+            </span>
+          </button>
 
-            {/* Dropdown Menu with Member Options */}
-            <AnimatePresence>
-              {showMemberDropdown && (
-                <motion.div
-                  initial={{ opacity: 0, y: -6, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -6, scale: 0.95 }}
-                  transition={{ duration: 0.12 }}
-                  className="absolute left-0 top-full mt-1.5 z-50 w-44 bg-brand-card border border-brand-border rounded-2xl p-1.5 shadow-2xl backdrop-blur-xl"
-                >
-                  <div className="text-[9px] font-mono font-bold uppercase text-text-secondary px-2.5 py-1 border-b border-brand-border/40">
-                    Seleziona Membro:
-                  </div>
-                  <div className="space-y-0.5 mt-1 max-h-48 overflow-y-auto">
-                    {members.map(m => (
-                      <button
-                        key={m.name}
-                        onClick={() => {
-                          setSelectedMember(m.name);
-                          setShowMemberDropdown(false);
-                        }}
-                        className={cn(
-                          "w-full text-left px-2.5 py-2 rounded-xl text-xs font-bold flex items-center justify-between transition-colors cursor-pointer",
-                          selectedMember === m.name
-                            ? "bg-brand-green/15 text-brand-green"
-                            : "hover:bg-white/5 text-text-primary"
-                        )}
-                      >
-                        <div className="flex items-center gap-2">
-                          <span 
-                            className="w-2.5 h-2.5 rounded-full shrink-0 shadow-sm"
-                            style={{ backgroundColor: m.color || '#00e660' }}
-                          />
-                          <span className="font-display font-black uppercase text-xs">{m.name}</span>
-                        </div>
-                        {selectedMember === m.name && <Check size={14} className="text-brand-green" />}
-                      </button>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
+          {/* Pulsante Cancellazione Disponibilità Membro Attuale - solo icona */}
+          <button
+            type="button"
+            onClick={() => setShowClearConfirm(true)}
+            className="w-[34px] h-[34px] rounded-full bg-brand-dark hover:bg-red-500/15 border border-brand-border/80 hover:border-red-500/60 text-text-secondary hover:text-red-400 flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-95 shrink-0"
+            title={`Cancella tutte le disponibilità di ${selectedMember}`}
+            aria-label={`Cancella tutte le disponibilità di ${selectedMember}`}
+          >
+            <Eraser size={14} className="shrink-0 transition-transform active:rotate-12" />
+          </button>
 
-          {/* 2. Giorni Ricorrenti Pill (Perfettamente centrato ed equidistante) */}
-          <div className="flex justify-center">
-            <button
-              onClick={() => setShowRecurringPanel(!showRecurringPanel)}
-              className={cn(
-                "h-[34px] px-2.5 py-1 rounded-full border text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer shadow-xs active:scale-95 shrink-0 whitespace-nowrap",
-                showRecurringPanel
-                  ? "bg-brand-green/20 border-brand-green text-brand-green"
-                  : "bg-brand-dark/90 hover:bg-brand-dark border-brand-border/80 hover:border-brand-green/50 text-text-primary"
-              )}
+          {/* Feedback salvataggio discreto a destra se attivo */}
+          {isSavedFeedback && (
+            <motion.span 
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0 }}
+              className="text-[10px] font-mono font-black uppercase tracking-wider text-emerald-400 shrink-0 ml-auto hidden sm:inline-block"
             >
-              <Repeat size={12} className="text-brand-green shrink-0" />
-              <span className="font-display font-black text-[11.5px] uppercase tracking-normal">
-                Giorni Ricorrenti
-              </span>
-            </button>
-          </div>
-
-          {/* 3. Pulsante Cancellazione (All'estrema destra) */}
-          <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={() => setShowClearConfirm(true)}
-              className="h-[34px] w-[34px] rounded-full bg-brand-dark hover:bg-red-500/15 border border-brand-border/80 hover:border-red-500/60 text-text-secondary hover:text-red-400 flex items-center justify-center transition-all cursor-pointer shadow-xs active:scale-90 shrink-0"
-              title={`Cancella tutte le disponibilità di ${selectedMember}`}
-              aria-label="Cancella disponibilità"
-            >
-              <Eraser size={15} className="shrink-0 transition-transform active:rotate-12" />
-            </button>
-          </div>
+              Salvato ✓
+            </motion.span>
+          )}
         </div>
 
         {/* Centered Modal Confirmation Popup with Blurred Backdrop */}
@@ -720,7 +732,7 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
                 <div className="flex items-center justify-between gap-2">
                   <div className="flex items-center gap-2 text-brand-green min-w-0">
                     <Repeat size={16} className="text-brand-green shrink-0" />
-                    <h4 className="font-display font-black text-xs sm:text-sm uppercase tracking-wide text-brand-green truncate">
+                    <h4 className="font-display font-black text-xs sm:text-sm uppercase tracking-wide text-brand-green leading-tight">
                       GIORNI FISSI RICORRENTI ({selectedMember})
                     </h4>
                   </div>
@@ -798,19 +810,23 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
         {/* Month Navigation (Centered exactly like in screenshot) */}
         <div className="flex items-center justify-between py-1 px-1">
           <button
-            onClick={() => setCurrentMonth(prev => subMonths(prev, 1))}
+            onClick={() => {
+              setCurrentMonth(prev => subMonths(prev, 1));
+            }}
             className="w-8 h-8 rounded-lg bg-brand-dark border border-brand-border hover:border-brand-green flex items-center justify-center text-text-secondary hover:text-brand-green transition-all cursor-pointer active:scale-95"
             title="Mese precedente"
           >
             <ChevronLeft size={16} />
           </button>
 
-          <div className="font-display font-black text-sm sm:text-base uppercase tracking-wider text-text-primary text-center">
+          <div className="font-display font-black text-[17px] uppercase tracking-wider text-text-primary text-center">
             {format(currentMonth, 'MMMM yyyy', { locale: it })}
           </div>
 
           <button
-            onClick={() => setCurrentMonth(prev => addMonths(prev, 1))}
+            onClick={() => {
+              setCurrentMonth(prev => addMonths(prev, 1));
+            }}
             className="w-8 h-8 rounded-lg bg-brand-dark border border-brand-border hover:border-brand-green flex items-center justify-center text-text-secondary hover:text-brand-green transition-all cursor-pointer active:scale-95"
             title="Mese successivo"
           >
@@ -844,25 +860,40 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
                 onClick={() => isCurMonth && handleToggleDay(day)}
                 disabled={!isCurMonth}
                 className={cn(
-                  "aspect-square min-h-[46px] sm:min-h-[52px] w-full rounded-xl py-1.5 px-0.5 sm:py-2 sm:px-1 transition-all relative border select-none text-left overflow-hidden min-w-0 cursor-pointer flex flex-col justify-between items-center",
+                  "h-[51px] sm:h-[55px] min-h-[51px] sm:min-h-[55px] w-full rounded-xl py-1 px-0.5 sm:py-1.5 sm:px-1 transition-all relative select-none text-left overflow-hidden min-w-0 cursor-pointer flex flex-col justify-between items-center",
                   // Outside current month
-                  !isCurMonth && "opacity-20 cursor-default border-transparent bg-transparent",
+                  !isCurMonth && "opacity-20 cursor-default border border-transparent bg-transparent",
                   
-                  // Inside current month:
+                  // Inside current month - Base border thickness: giorno attuale ha bordo più spesso di 3.5px bianco
+                  isCurMonth && (isDayToday ? "border-[3.5px] border-white shadow-[0_0_12px_rgba(255,255,255,0.25)]" : "border"),
+
                   // Case 1: ALL band members available -> ILLUMINATO / ACCESO (Glowing vibrant neon backlight & border)
-                  isCurMonth && isFullBand && "bg-[#00e660]/35 border-2 border-[#00e660] shadow-[0_0_24px_rgba(0,230,96,0.85),inset_0_0_16px_rgba(0,230,96,0.4)] ring-2 ring-[#00e660]/70",
+                  isCurMonth && isFullBand && (
+                    isDayToday
+                      ? "bg-[#00e660]/35 !border-white !border-[3.5px] shadow-[0_0_24px_rgba(0,230,96,0.85),inset_0_0_16px_rgba(0,230,96,0.4)] ring-2 ring-[#00e660]/80"
+                      : "bg-[#00e660]/35 border-[#00e660] shadow-[0_0_24px_rgba(0,230,96,0.85),inset_0_0_16px_rgba(0,230,96,0.4)] ring-2 ring-[#00e660]/70"
+                  ),
                   
                   // Case 2: Active member available, but not whole band
-                  isCurMonth && !isFullBand && isAvailable && "bg-brand-card/90 border border-brand-green shadow-[0_0_8px_rgba(0,230,96,0.22)] ring-1 ring-brand-green/60",
+                  isCurMonth && !isFullBand && isAvailable && (
+                    isDayToday
+                      ? "bg-brand-card/95 !border-white !border-[3.5px] shadow-[0_0_12px_rgba(255,255,255,0.3)] ring-1 ring-brand-green/60"
+                      : "bg-brand-card/90 border-brand-green shadow-[0_0_8px_rgba(0,230,96,0.22)] ring-1 ring-brand-green/60"
+                  ),
                   
                   // Case 3: Other members available, not active member and not full band
-                  isCurMonth && !isFullBand && !isAvailable && allAvailable.length > 0 && "bg-brand-dark/80 border border-brand-border/90 hover:border-brand-green/50",
+                  isCurMonth && !isFullBand && !isAvailable && allAvailable.length > 0 && (
+                    isDayToday
+                      ? "bg-brand-dark/90 !border-white !border-[3.5px] shadow-[0_0_12px_rgba(255,255,255,0.3)]"
+                      : "bg-brand-dark/80 border-brand-border/90 hover:border-brand-green/50"
+                  ),
                   
                   // Case 4: No one available
-                  isCurMonth && !isFullBand && !isAvailable && allAvailable.length === 0 && "bg-brand-dark/70 border border-brand-border/70 hover:border-brand-green/40",
-                  
-                  // Today highlight
-                  isCurMonth && isDayToday && !isFullBand && "border-brand-green/80 ring-1 ring-brand-green/50"
+                  isCurMonth && !isFullBand && !isAvailable && allAvailable.length === 0 && (
+                    isDayToday
+                      ? "bg-white/[0.04] !border-white !border-[3.5px] shadow-[0_0_12px_rgba(255,255,255,0.3)]"
+                      : "bg-brand-dark/70 border-brand-border/70 hover:border-brand-green/40"
+                  )
                 )}
               >
                 {/* Internal Radial Light Beam when whole cell is illuminated */}
@@ -870,25 +901,27 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
                   <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,255,102,0.45)_0%,rgba(0,230,96,0.2)_70%,transparent_100%)] pointer-events-none" />
                 )}
 
-                {/* Top Section: Day Number (High contrast & perfectly legible) */}
-                <div className="flex items-center justify-center w-full leading-none pt-0.5 z-10">
+                {/* Top Section: Day Number (Clean, uniform typography across all days) */}
+                <div className="h-4 sm:h-4.5 flex items-center justify-center w-full leading-none z-10 shrink-0">
                   <span className={cn(
-                    "text-xs sm:text-sm font-mono font-bold leading-none text-center",
-                    isDayToday 
-                      ? (isFullBand ? "text-black font-black bg-[#00e660] px-1.5 py-0.5 rounded-sm shadow-xs" : "text-brand-green font-black underline underline-offset-2 decoration-2") 
-                      : isCurMonth 
-                        ? (isFullBand ? "text-white font-black drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]" : isAvailable ? "text-brand-green font-black" : "text-text-primary") 
-                        : "text-zinc-600"
+                    "font-mono leading-none text-center text-[11px] sm:text-[12px]",
+                    isCurMonth 
+                      ? (isFullBand 
+                          ? "text-white font-black drop-shadow-[0_1px_4px_rgba(0,0,0,0.95)]" 
+                          : isDayToday 
+                            ? "text-white font-black" 
+                            : "text-white/90 font-bold") 
+                      : "text-zinc-600/40"
                   )}>
                     {format(day, 'd')}
                   </span>
                 </div>
 
-                {/* Bottom Section: Rock hand emoji 🤘 if full band, otherwise Member Squares */}
-                <div className="w-full flex items-center justify-center pb-0.5 z-10 min-w-0">
+                {/* Bottom Section: Rock hand emoji 🤘 if full band, otherwise Member Initial Badges */}
+                <div className="flex-1 w-full flex items-center justify-center pb-0.5 z-10 min-h-0">
                   {isCurMonth && isFullBand ? (
                     <span 
-                      className="text-xs sm:text-sm leading-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] select-none transform hover:scale-110 transition-transform"
+                      className="text-sm sm:text-base leading-none drop-shadow-[0_1px_3px_rgba(0,0,0,0.8)] select-none transform hover:scale-110 transition-transform"
                       role="img"
                       aria-label="Tutti disponibili"
                       title="Tutta la band disponibile!"
@@ -896,20 +929,54 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
                       🤘
                     </span>
                   ) : isCurMonth && allAvailable.length > 0 ? (
-                    <div className="flex flex-wrap items-center justify-center gap-[2.5px] max-w-[34px] sm:max-w-[40px] transition-all">
-                      {allAvailable.map(m => (
-                        <span 
-                          key={m.name} 
-                          className="w-[4.5px] h-[4.5px] sm:w-[5.5px] sm:h-[5.5px] rounded-[1px] shrink-0 transition-all shadow-xs ring-1 ring-black/40" 
-                          style={{ 
-                            backgroundColor: m.color || '#00e660'
-                          }} 
-                          title={`${m.name}: Disponibile`}
-                        />
-                      ))}
-                    </div>
+                    allAvailable.length === 1 ? (
+                      <span 
+                        key={allAvailable[0].name} 
+                        className="w-[17px] h-[17px] sm:w-[19px] sm:h-[19px] rounded-full shrink-0 flex items-center justify-center text-[9px] sm:text-[10px] font-mono font-black select-none shadow-xs border border-black/40 leading-none" 
+                        style={{ 
+                          backgroundColor: allAvailable[0].color || '#00e660',
+                          color: getBadgeTextColor(allAvailable[0].color)
+                        }} 
+                        title={`${allAvailable[0].name}: Disponibile`}
+                      >
+                        {allAvailable[0].name.charAt(0).toUpperCase()}
+                      </span>
+                    ) : allAvailable.length === 2 ? (
+                      <div className="flex items-center justify-center gap-1">
+                        {allAvailable.map(m => (
+                          <span 
+                            key={m.name} 
+                            className="w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full shrink-0 flex items-center justify-center text-[8.5px] sm:text-[9.5px] font-mono font-black select-none shadow-xs border border-black/40 leading-none" 
+                            style={{ 
+                              backgroundColor: m.color || '#00e660',
+                              color: getBadgeTextColor(m.color)
+                            }} 
+                            title={`${m.name}: Disponibile`}
+                          >
+                            {m.name.charAt(0).toUpperCase()}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      /* 3 or 4 members: compact 2x2 grid */
+                      <div className="grid grid-cols-2 gap-0.5 place-items-center">
+                        {allAvailable.slice(0, 4).map(m => (
+                          <span 
+                            key={m.name} 
+                            className="w-3 h-3 sm:w-3.5 sm:h-3.5 rounded-full shrink-0 flex items-center justify-center text-[7.5px] sm:text-[8.5px] font-mono font-black select-none shadow-xs border border-black/40 leading-none" 
+                            style={{ 
+                              backgroundColor: m.color || '#00e660',
+                              color: getBadgeTextColor(m.color)
+                            }} 
+                            title={`${m.name}: Disponibile`}
+                          >
+                            {m.name.charAt(0).toUpperCase()}
+                          </span>
+                        ))}
+                      </div>
+                    )
                   ) : (
-                    <div className="h-[4.5px] sm:h-[5.5px]" />
+                    <div className="h-3 sm:h-3.5" />
                   )}
                 </div>
               </button>
@@ -953,9 +1020,14 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
                   title={`Seleziona ${m.name} per modificare la sua disponibilità`}
                 >
                   <span 
-                    className="w-2 h-2 rounded-full shrink-0 shadow-sm"
-                    style={{ backgroundColor: m.color || '#00e660' }}
-                  />
+                    className="w-3.5 h-3.5 rounded-full shrink-0 flex items-center justify-center text-[8px] font-mono font-black shadow-xs leading-none"
+                    style={{ 
+                      backgroundColor: m.color || '#00e660',
+                      color: getBadgeTextColor(m.color)
+                    }}
+                  >
+                    {m.name.charAt(0).toUpperCase()}
+                  </span>
                   <span>{m.name}</span>
                   {isSelected && <span className="text-[9px] text-brand-green font-normal">(Tu)</span>}
                 </button>

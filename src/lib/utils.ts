@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { getCustomMemberColors } from './memberColors';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -61,6 +62,13 @@ export function getMemberColor(name?: string, members?: { name: string; color?: 
   if (!name) return '#00e660';
   if (name === 'Spesa condivisa' || name === 'Condivisa') return '#00e660';
   
+  // Check custom override first
+  const customOverrides = getCustomMemberColors();
+  const lowerName = name.trim().toLowerCase();
+  if (customOverrides[lowerName] && customOverrides[lowerName].startsWith('#')) {
+    return customOverrides[lowerName];
+  }
+
   if (members && members.length > 0) {
     const found = members.find(m => m.name.toLowerCase() === name.toLowerCase());
     if (found?.color && found.color.startsWith('#')) {

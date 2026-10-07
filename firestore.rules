@@ -20,5 +20,15 @@ service cloud.firestore {
         && request.resource.data.dates is map
         && request.resource.data.updatedAt is string;
     }
+
+    // Band members custom colors synchronization
+    match /member_colors/{colorDoc} {
+      allow read: if true;
+      allow write: if colorDoc is string
+        && colorDoc.size() > 0
+        && colorDoc.size() <= 64
+        && request.resource.data.colors is map
+        && request.resource.data.updatedAt is string;
+    }
   }
 }
