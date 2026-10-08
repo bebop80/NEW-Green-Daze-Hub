@@ -218,11 +218,11 @@ export const useBandAvailability = (rawMembers?: Member[]) => {
   // Count of members with at least one preference in target period
   const availableMembersCount = availableMembers.length;
 
-  // Check if there is at least one day compatible with ALL members in the band
+  // Check all days compatible with ALL members in the band
   // In late month: checks next month and remaining days of current month.
   // In early month: checks current month from today onwards.
-  const hasAllMembersCommonDate = useMemo(() => {
-    if (members.length < 2) return false;
+  const allMembersCommonDates = useMemo(() => {
+    if (members.length < 2) return [];
 
     const { todayKey, isLateMonth, currentMonthEnd, nextMonthEnd } = targetPeriodInfo;
     const candidateDates = new Set<string>();
@@ -240,15 +240,19 @@ export const useBandAvailability = (rawMembers?: Member[]) => {
       }
     }
 
-    for (const dateKey of candidateDates) {
+    const common: string[] = [];
+    for (const dateKey of Array.from(candidateDates).sort()) {
       const allAvailable = members.every((m) => isMemberAvail(m.name, dateKey));
       if (allAvailable) {
-        return true;
+        common.push(dateKey);
       }
     }
 
-    return false;
+    return common;
   }, [members, availabilityMap, targetPeriodInfo]);
+
+  const allMembersCommonDatesCount = allMembersCommonDates.length;
+  const hasAllMembersCommonDate = allMembersCommonDatesCount > 0;
 
   return {
     availabilityMap,
@@ -256,6 +260,8 @@ export const useBandAvailability = (rawMembers?: Member[]) => {
     availableMembers,
     availableMembersCount,
     hasAllMembersCommonDate,
+    allMembersCommonDatesCount,
+    allMembersCommonDates,
     targetPeriodInfo
   };
 };

@@ -62,7 +62,8 @@ const App = () => {
   const {
     availableMembers,
     availableMembersCount,
-    hasAllMembersCommonDate
+    hasAllMembersCommonDate,
+    allMembersCommonDatesCount
   } = useBandAvailability(data?.members);
 
   // Tab State: 'home' | 'prove' | 'pagamenti' | 'concerti'
@@ -381,6 +382,7 @@ const App = () => {
                   formatRehearsalForShare={formatRehearsalForShare}
                   availableMembers={availableMembers}
                   hasAllMembersCommonDate={hasAllMembersCommonDate}
+                  allMembersCommonDatesCount={allMembersCommonDatesCount}
                 />
               </motion.div>
             )}

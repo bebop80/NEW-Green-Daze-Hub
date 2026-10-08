@@ -32,6 +32,7 @@ interface ProveTabProps {
   formatRehearsalForShare: (r: any) => string;
   availableMembers?: Member[];
   hasAllMembersCommonDate?: boolean;
+  allMembersCommonDatesCount?: number;
 }
 
 export const ProveTab: React.FC<ProveTabProps> = ({
@@ -45,7 +46,8 @@ export const ProveTab: React.FC<ProveTabProps> = ({
   shareInfo,
   formatRehearsalForShare,
   availableMembers = [],
-  hasAllMembersCommonDate = false
+  hasAllMembersCommonDate = false,
+  allMembersCommonDatesCount = 0
 }) => {
   const [calendarItem, setCalendarItem] = useState<CalendarEventItem | null>(null);
   const [showFutureListModal, setShowFutureListModal] = useState(false);
@@ -316,10 +318,22 @@ export const ProveTab: React.FC<ProveTabProps> = ({
 
                 {hasAllMembersCommonDate && (
                   <span 
-                    className="text-base select-none shrink-0 ml-0.5 filter drop-shadow-[0_0_8px_#00e660] dark:drop-shadow-[0_0_12px_#00e660]" 
-                    title="Giorno compatibile con tutta la band!"
+                    className="relative inline-flex items-center justify-center select-none shrink-0 ml-1 filter drop-shadow-[0_0_8px_#00e660] dark:drop-shadow-[0_0_12px_#00e660]" 
+                    title={
+                      allMembersCommonDatesCount > 1 
+                        ? `${allMembersCommonDatesCount} giorni compatibili con tutta la band!`
+                        : "Giorno compatibile con tutta la band!"
+                    }
                   >
-                    🤘
+                    <span className="text-base leading-none">🤘</span>
+
+                    {allMembersCommonDatesCount > 1 && (
+                      <span 
+                        className="absolute -top-1.5 -right-2 min-w-[15px] h-[15px] px-0.5 bg-red-500 text-white text-[9px] font-mono font-black rounded-full flex items-center justify-center border border-white dark:border-[#12151e] shadow-[0_0_6px_rgba(239,68,68,0.8)] leading-none pointer-events-none"
+                      >
+                        {allMembersCommonDatesCount}
+                      </span>
+                    )}
                   </span>
                 )}
               </div>
