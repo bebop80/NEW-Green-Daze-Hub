@@ -20,6 +20,7 @@ import { it } from 'date-fns/locale';
 import { AppData, Concert } from '../../types';
 import { safeParseLocal } from '../../lib/utils';
 import { CalendarExportModal, CalendarEventItem } from '../modals/CalendarExportModal';
+import { handleCalendarExport } from '../../lib/calendar';
 import { PastConcertsModal } from '../modals/PastConcertsModal';
 import concertBg from '../../assets/images/gemini_concert_bg.jpg';
 
@@ -326,13 +327,13 @@ export const ConcertiTab: React.FC<ConcertiTabProps> = ({
 
                 <button
                   onClick={() => {
-                    setCalendarItem({
+                    handleCalendarExport({
                       title: `⚡ Live Green Daze: ${currentConcert.name}`,
                       date: currentConcert.date,
                       timeFrom: currentConcert.time,
                       location: currentConcert.address || currentConcert.name,
                       description: `Live Green Daze @ ${currentConcert.name}. ${currentConcert.notes || ''}`
-                    });
+                    }, setCalendarItem);
                   }}
                   className="py-2 px-1 flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] border border-slate-200 dark:border-transparent text-xs font-bold text-slate-800 dark:text-white cursor-pointer active:scale-95 transition-all shadow-xs"
                 >

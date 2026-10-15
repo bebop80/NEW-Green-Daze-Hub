@@ -13,6 +13,7 @@ import { it } from 'date-fns/locale';
 import { AppData, Member, Concert } from '../../types';
 import { safeParseLocal } from '../../lib/utils';
 import { CalendarExportModal, CalendarEventItem } from '../modals/CalendarExportModal';
+import { handleCalendarExport } from '../../lib/calendar';
 import stageBg from '../../assets/images/gemini_stage_bg.jpg';
 import crowdHandsBg from '../../assets/images/rock_concert_crowd_hands.jpg';
 
@@ -189,14 +190,14 @@ export const HomeTab: React.FC<HomeTabProps> = ({
 
               <button
                 onClick={() => {
-                  setCalendarItem({
+                  handleCalendarExport({
                     title: `🎵 Prova Green Daze${roomObj?.name ? `: ${roomObj.name}` : ''}`,
                     date: data.next.date,
                     timeFrom: data.next.from,
                     timeTo: data.next.to,
                     location: roomObj?.address || roomObj?.name || '',
                     description: `Prova Green Daze in ${roomObj?.name || 'sala prove'}`
-                  });
+                  }, setCalendarItem);
                 }}
                 className="py-2 px-2 flex items-center justify-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-white/[0.05] dark:hover:bg-white/[0.1] border border-slate-200 dark:border-transparent text-xs font-bold text-slate-800 dark:text-white transition-all cursor-pointer active:scale-95 shadow-xs"
               >

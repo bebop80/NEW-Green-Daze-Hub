@@ -16,6 +16,7 @@ import { it } from 'date-fns/locale';
 import { AppData, FutureRehearsal } from '../types';
 import { safeParseLocal } from '../lib/utils';
 import { CalendarExportModal, CalendarEventItem } from './modals/CalendarExportModal';
+import { handleCalendarExport } from '../lib/calendar';
 
 interface UpcomingSessionsProps {
   data: AppData | null;
@@ -245,14 +246,14 @@ export const UpcomingSessions: React.FC<UpcomingSessionsProps> = ({
                       {/* Calendar Export (.ics & Google Calendar) */}
                       <button
                         onClick={() => {
-                          setCalendarItem({
+                          handleCalendarExport({
                             title: `🎵 Prova Band${roomObj?.name ? `: ${roomObj.name}` : ''}`,
                             date: fr.date,
                             timeFrom: fr.from,
                             timeTo: fr.to,
                             location: roomObj?.address || roomObj?.name || '',
                             description: `Prova della band Green Daze in ${roomObj?.name || 'sala prove'}`
-                          });
+                          }, setCalendarItem);
                         }}
                         className="min-h-[40px] min-w-[40px] flex items-center justify-center p-2 text-zinc-400 hover:text-brand-green hover:bg-white/5 rounded-xl transition-colors cursor-pointer"
                         title="Esporta nel Calendario (Google / .ics)"

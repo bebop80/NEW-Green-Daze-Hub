@@ -18,6 +18,7 @@ import { it } from 'date-fns/locale';
 import { AppData, FutureRehearsal } from '../../types';
 import { safeParseLocal } from '../../lib/utils';
 import { CalendarExportModal, CalendarEventItem } from './CalendarExportModal';
+import { handleCalendarExport } from '../../lib/calendar';
 
 interface FutureSessionsListModalProps {
   isOpen: boolean;
@@ -201,14 +202,14 @@ export const FutureSessionsListModal: React.FC<FutureSessionsListModalProps> = (
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => {
-                          setCalendarItem({
+                          handleCalendarExport({
                             title: `🎵 Prova Green Daze: ${roomObj?.name || ''}`,
                             date: fr.date,
                             timeFrom: fr.from,
                             timeTo: fr.to,
                             location: roomObj?.address || roomObj?.name || '',
                             description: `Prova Green Daze`
-                          });
+                          }, setCalendarItem);
                         }}
                         className="w-7 h-7 flex items-center justify-center rounded-lg bg-brand-card hover:bg-white/10 text-text-secondary hover:text-brand-green border border-brand-border cursor-pointer"
                         title="Esporta calendario"

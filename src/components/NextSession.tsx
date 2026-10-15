@@ -5,6 +5,7 @@ import { it } from 'date-fns/locale';
 import { AppData, Member } from '../types';
 import { safeParseLocal } from '../lib/utils';
 import { CalendarExportModal, CalendarEventItem } from './modals/CalendarExportModal';
+import { handleCalendarExport } from '../lib/calendar';
 
 interface NextSessionProps {
   data: AppData | null;
@@ -132,14 +133,14 @@ export const NextSession: React.FC<NextSessionProps> = ({
 
                 <button
                   onClick={() => {
-                    setCalendarItem({
+                    handleCalendarExport({
                       title: `🎵 Prova Band${roomObj?.name ? `: ${roomObj.name}` : ''}`,
                       date: data.next.date,
                       timeFrom: data.next.from,
                       timeTo: data.next.to,
                       location: roomObj?.address || roomObj?.name || '',
                       description: `Prova della band in ${roomObj?.name || 'sala prove'}`
-                    });
+                    }, setCalendarItem);
                   }}
                   className="h-[46px] flex flex-col items-center justify-center gap-0.5 px-1 py-1 bg-brand-dark hover:bg-white/5 border border-brand-border hover:border-brand-green/40 text-text-primary rounded-xl transition-all shadow-xs cursor-pointer active:scale-95"
                 >

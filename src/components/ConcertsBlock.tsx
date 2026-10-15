@@ -21,6 +21,7 @@ import { it } from 'date-fns/locale';
 import { AppData, Concert } from '../types';
 import { cn, safeParseLocal, toLocalYYYYMMDD } from '../lib/utils';
 import { CalendarExportModal, CalendarEventItem } from './modals/CalendarExportModal';
+import { handleCalendarExport } from '../lib/calendar';
 import { AnimatePresence, motion } from 'motion/react';
 
 interface ConcertsBlockProps {
@@ -363,13 +364,13 @@ export const ConcertsBlock: React.FC<ConcertsBlockProps> = ({
                     {/* Action Buttons */}
                     <div className="flex items-center gap-1.5">
                       <button
-                        onClick={() => setCalendarItem({
+                        onClick={() => handleCalendarExport({
                           title: `🎤 Concerto Green Daze: ${currentConcert.name}`,
                           date: currentConcert.date,
                           timeFrom: currentConcert.time,
                           location: currentConcert.address || currentConcert.name,
                           description: `Live Green Daze. Soundcheck: ${currentConcert.soundcheck || 'N/D'}. Note: ${currentConcert.notes || 'N/D'}`
-                        })}
+                        }, setCalendarItem)}
                         className="min-h-[44px] min-w-[44px] flex items-center justify-center p-2 text-text-secondary hover:text-brand-green hover:bg-white/5 rounded-xl transition-all cursor-pointer"
                         title="Aggiungi al calendario (.ics / Google)"
                         aria-label="Aggiungi al calendario"
