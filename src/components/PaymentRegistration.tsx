@@ -114,7 +114,7 @@ export const PaymentRegistration: React.FC<PaymentRegistrationProps> = ({
                     }}
                   >
                     <option value="" className="bg-brand-card text-text-secondary">Seleziona Membro...</option>
-                    {data?.members.map(m => (
+                    {(data?.members || []).map(m => (
                       <option key={m.name} value={m.name} className="bg-brand-card text-text-primary font-bold">
                         {m.name}
                       </option>

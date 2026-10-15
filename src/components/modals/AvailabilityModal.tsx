@@ -323,7 +323,7 @@ export const AvailabilityModal: React.FC<AvailabilityModalProps> = ({
     for (const [key, dates] of Object.entries(availabilityMap)) {
       if (key.trim().toLowerCase() === target && dates) {
         const val = dates[dateKey];
-        if (val === true || val === 'true' || val === 'available' || val === 1 || Boolean(val)) {
+        if (Boolean(val) && (val === true || (val as any) === 'true' || (val as any) === 'available' || (val as any) === 1)) {
           return true;
         }
       }

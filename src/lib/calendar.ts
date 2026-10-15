@@ -141,7 +141,13 @@ export function openGoogleCalendarPriority(item: CalendarEventItem, onDone?: () 
 }
 
 export function handleCalendarExport(item: CalendarEventItem, onOpenModal: (item: CalendarEventItem) => void) {
-  const direct = isAndroidDevice() && typeof localStorage !== 'undefined' && localStorage.getItem('gd_direct_calendar_app') === 'true';
+  let direct = false;
+  try {
+    direct = isAndroidDevice() && typeof localStorage !== 'undefined' && localStorage.getItem('gd_direct_calendar_app') === 'true';
+  } catch {
+    direct = false;
+  }
+
   if (direct) {
     openGoogleCalendarPriority(item);
   } else {

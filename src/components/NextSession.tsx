@@ -60,7 +60,7 @@ export const NextSession: React.FC<NextSessionProps> = ({
 
           {/* Location Card */}
           {(() => {
-            const roomObj = data.customRooms.find(r => r.id === data.next.room);
+            const roomObj = data?.customRooms?.find(r => r.id === data.next.room);
             return (
               <div className="bg-brand-dark/90 border border-brand-border rounded-2xl p-3 sm:p-4 space-y-1 text-center">
                 <div className="flex items-center justify-center gap-1.5">
@@ -111,7 +111,7 @@ export const NextSession: React.FC<NextSessionProps> = ({
 
           {/* Action Buttons: Vertical icon + label layout to prevent text clipping while maintaining height */}
           {(() => {
-            const roomObj = data.customRooms.find(r => r.id === data.next.room);
+            const roomObj = data?.customRooms?.find(r => r.id === data.next.room);
             return (
               <div className="grid grid-cols-3 gap-2 pt-1">
                 {roomObj?.address ? (

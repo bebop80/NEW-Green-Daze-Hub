@@ -105,16 +105,24 @@ const App = () => {
   // Dark / Light Theme
   const [theme, setTheme] = useState<'dark' | 'light'>(() => {
     if (typeof window !== 'undefined') {
-      return (localStorage.getItem('theme') as 'dark' | 'light') || 'dark';
+      try {
+        return (localStorage.getItem('theme') as 'dark' | 'light') || 'dark';
+      } catch {
+        return 'dark';
+      }
     }
     return 'dark';
   });
 
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.remove('light', 'dark');
-    root.classList.add(theme);
-    localStorage.setItem('theme', theme);
+    try {
+      const root = window.document.documentElement;
+      root.classList.remove('light', 'dark');
+      root.classList.add(theme);
+      localStorage.setItem('theme', theme);
+    } catch (e) {
+      console.warn('Error setting theme in localStorage', e);
+    }
   }, [theme]);
 
   // Sync rehearsal form with data.next
@@ -218,7 +226,7 @@ const App = () => {
   };
 
   const formatRehearsalForShare = (r: Rehearsal | FutureRehearsal) => {
-    const sala = data?.customRooms.find((s) => s.id === r.room);
+    const sala = data?.customRooms?.find((s) => s.id === r.room);
     const dateStr = format(safeParseLocal(r.date), 'EEEE d MMMM', { locale: it });
     let text = `🎸 PROSSIMA PROVA GREEN DAZE!\n\n📅 ${dateStr}\n`;
     if (r.from && r.to) text += `🕒 Dalle ${r.from} alle ${r.to}\n`;
@@ -304,20 +312,36 @@ const App = () => {
     data.next.notes.replace(/\[SPESA_CONDIVISA\]/g, '').trim().length > 0
   );
 
-  if (loading && !data) {
+  if (!data) {
     return (
       <div className="h-[100dvh] w-full bg-brand-dark flex flex-col items-center justify-center space-y-6 relative overflow-hidden text-text-primary">
         <PunkBackground theme={theme} />
-        <div className="relative z-10 flex flex-col items-center justify-center space-y-6">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
-          >
-            <Eye size={64} className="text-brand-green" />
-          </motion.div>
-          <p className="font-display font-semibold text-lg tracking-wider animate-pulse uppercase">
-            Sincronizzazione Dati...
-          </p>
+        <div className="relative z-10 flex flex-col items-center justify-center space-y-6 p-6 text-center">
+          {loading ? (
+            <>
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              >
+                <Eye size={64} className="text-brand-green" />
+              </motion.div>
+              <p className="font-display font-semibold text-lg tracking-wider animate-pulse uppercase">
+                Sincronizzazione Dati...
+              </p>
+            </>
+          ) : (
+            <>
+              <p className="font-rock text-xl uppercase tracking-wider text-text-primary">
+                Caricamento dati...
+              </p>
+              <button
+                onClick={() => window.location.reload()}
+                className="px-6 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-rock text-sm uppercase tracking-wider shadow-lg active:scale-95 cursor-pointer"
+              >
+                Ricarica App
+              </button>
+            </>
+          )}
         </div>
       </div>
     );

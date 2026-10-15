@@ -217,7 +217,7 @@ export const Modals: React.FC<ModalsProps> = ({
                 <div className="space-y-6">
                   <h3 className="text-2xl font-display font-black uppercase tracking-tight text-brand-green border-b border-brand-green/20 pb-4 flex items-center gap-3"><MapPin size={24}/> Gestione Sedi</h3>
                   <div className="max-h-[160px] overflow-y-auto space-y-2 mb-4 scrollbar-hide">
-                    {data?.customRooms.map(r => (
+                    {(data?.customRooms || []).map(r => (
                       <div key={r.id} className="flex justify-between items-center bg-white/5 p-3 rounded-xl text-xs font-bold border border-white/5">
                         {r.name}
                         <button 

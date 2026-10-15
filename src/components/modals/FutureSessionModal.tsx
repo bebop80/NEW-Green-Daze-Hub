@@ -202,7 +202,7 @@ export const FutureSessionModal: React.FC<FutureSessionModalProps> = ({
                 }}
               >
                 <option value="" className="bg-brand-card text-text-secondary">Seleziona Sede...</option>
-                {data?.customRooms.map(r => (
+                {(data?.customRooms || []).map(r => (
                   <option key={r.id} value={r.id} className="bg-brand-card text-text-primary font-bold">
                     {r.name}
                   </option>

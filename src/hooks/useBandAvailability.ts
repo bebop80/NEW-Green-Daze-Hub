@@ -140,7 +140,7 @@ export const useBandAvailability = (rawMembers?: Member[]) => {
     for (const [key, dates] of Object.entries(availabilityMap)) {
       if (key.trim().toLowerCase() === target && dates) {
         const val = dates[dateKey];
-        if (val === true || val === 'true' || val === 'available' || val === 1 || Boolean(val)) {
+        if (Boolean(val) && (val === true || (val as any) === 'true' || (val as any) === 'available' || (val as any) === 1)) {
           return true;
         }
       }
@@ -183,7 +183,7 @@ export const useBandAvailability = (rawMembers?: Member[]) => {
       for (const [key, dates] of Object.entries(availabilityMap)) {
         if (key.trim().toLowerCase() === target && dates) {
           const hasAny = Object.entries(dates).some(([dKey, val]) => {
-            const isAvailable = val === true || val === 'true' || Boolean(val);
+            const isAvailable = Boolean(val) && (val === true || (val as any) === 'true');
             return isAvailable && dKey >= rangeStart && dKey <= rangeEnd;
           });
           if (hasAny) return true;

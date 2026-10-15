@@ -144,7 +144,7 @@ export const UpcomingSessions: React.FC<UpcomingSessionsProps> = ({
 
       <div className="p-4 sm:p-5 space-y-3">
         {sortedFuture.map(fr => {
-          const roomObj = data?.customRooms.find(r => r.id === fr.room);
+          const roomObj = data?.customRooms?.find(r => r.id === fr.room);
           const dateObj = safeParseLocal(fr.date);
           const dayName = format(dateObj, 'EEE', { locale: it }).toUpperCase();
           const dayNum = format(dateObj, 'dd');

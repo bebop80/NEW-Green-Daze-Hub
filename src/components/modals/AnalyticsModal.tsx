@@ -23,12 +23,12 @@ interface AnalyticsModalProps {
 export const AnalyticsModal: React.FC<AnalyticsModalProps> = ({ isOpen, onClose, data }) => {
   if (!isOpen) return null;
 
-  const totalPayments = data?.payments.length || 0;
-  const chartData = data?.members.map(m => ({
+  const totalPayments = data?.payments?.length || 0;
+  const chartData = (data?.members || []).map(m => ({
     name: m.name,
     count: (data?.payments || []).filter(p => p.payer === m.name).length,
     color: getMemberColor(m.name, data?.members)
-  })) || [];
+  }));
 
   const sharedCount = (data?.payments || []).filter(p => p.payer === 'Spesa condivisa').length;
   if (sharedCount > 0) {

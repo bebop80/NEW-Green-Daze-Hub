@@ -4,8 +4,23 @@ import { AppData, Member, Rehearsal } from '../types';
 import { GOOGLE_SCRIPT_URL } from '../constants';
 import { getCustomMemberColors, initMemberColorsSync, MEMBER_COLORS_UPDATED_EVENT } from '../lib/memberColors';
 
+const CACHED_APP_DATA_KEY = 'green_daze_cached_app_data_v1';
+
 export const useAppData = () => {
-  const [data, setData] = useState<AppData | null>(null);
+  const [data, setData] = useState<AppData | null>(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const raw = localStorage.getItem(CACHED_APP_DATA_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && typeof parsed === 'object') return parsed;
+        }
+      } catch (e) {
+        console.warn('Could not read cached app data', e);
+      }
+    }
+    return null;
+  });
   const [customColorsVersion, setCustomColorsVersion] = useState(0);
   const [loading, setLoading] = useState(true);
   const [lastSync, setLastSync] = useState<string>('--');
@@ -41,9 +56,9 @@ export const useAppData = () => {
       const json = await resp.json();
       
       // Sanitization: deduplicate members array received from backend
+      const uniqueMembers: Member[] = [];
+      const seen = new Set<string>();
       if (json && Array.isArray(json.members)) {
-        const uniqueMembers: Member[] = [];
-        const seen = new Set<string>();
         for (const m of json.members) {
           const norm = (m?.name || '').trim().toLowerCase();
           if (norm && !seen.has(norm)) {
@@ -54,12 +69,26 @@ export const useAppData = () => {
             });
           }
         }
-        json.members = uniqueMembers;
       }
 
-      setData(json);
+      const sanitized: AppData = {
+        payments: Array.isArray(json?.payments) ? json.payments : [],
+        concerts: Array.isArray(json?.concerts) ? json.concerts : [],
+        customRooms: Array.isArray(json?.customRooms) ? json.customRooms : [],
+        members: uniqueMembers.length > 0 ? uniqueMembers : (Array.isArray(json?.members) ? json.members : []),
+        settings: json?.settings || {},
+        next: json?.next || { date: '', from: '', to: '', room: '', notes: '' },
+        futureRehearsals: Array.isArray(json?.futureRehearsals) ? json.futureRehearsals : []
+      };
+
+      setData(sanitized);
+      try {
+        localStorage.setItem(CACHED_APP_DATA_KEY, JSON.stringify(sanitized));
+      } catch (e) {
+        console.warn('Failed to cache app data to localStorage', e);
+      }
       setLastSync(format(new Date(), 'HH:mm'));
-      return json;
+      return sanitized;
     } catch (error) {
       showToast('Errore di connessione', 'error');
       return null;
@@ -105,7 +134,9 @@ export const useAppData = () => {
 
   const calcolaTurno = useMemo(() => {
     const currentData = enrichedData || data;
-    if (!currentData || currentData.payments.length === 0 || currentData.members.length === 0) return null;
+    if (!currentData || !Array.isArray(currentData.payments) || currentData.payments.length === 0 || !Array.isArray(currentData.members) || currentData.members.length === 0) {
+      return null;
+    }
     const totals: Record<string, number> = {};
     currentData.members.forEach(m => totals[m.name] = 0);
     currentData.payments.forEach(p => { if (totals[p.payer] !== undefined) totals[p.payer]++; });

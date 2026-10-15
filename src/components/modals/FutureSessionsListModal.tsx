@@ -147,7 +147,7 @@ export const FutureSessionsListModal: React.FC<FutureSessionsListModalProps> = (
           ) : (
             sortedFuture.map((fr) => {
               const dateObj = safeParseLocal(fr.date);
-              const roomObj = data?.customRooms.find(r => r.id === fr.room);
+              const roomObj = data?.customRooms?.find(r => r.id === fr.room);
 
               return (
                 <div

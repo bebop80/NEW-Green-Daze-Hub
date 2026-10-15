@@ -22,12 +22,12 @@ export const AnalyticsSection: React.FC<AnalyticsSectionProps> = ({ data }) => {
   // Must appear "closed" when the app opens, expandable on user tap
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const totalPayments = data?.payments.length || 0;
-  const chartData = data?.members.map(m => ({
+  const totalPayments = data?.payments?.length || 0;
+  const chartData = (data?.members || []).map(m => ({
     name: m.name,
-    count: data.payments.filter(p => p.payer === m.name).length,
+    count: (data?.payments || []).filter(p => p.payer === m.name).length,
     color: m.color
-  })) || [];
+  }));
 
   const maxCount = Math.max(...chartData.map(d => d.count), 0);
   const dynamicHeight = Math.max(90, chartData.length * 26 + 15);

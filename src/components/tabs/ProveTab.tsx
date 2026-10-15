@@ -63,7 +63,7 @@ export const ProveTab: React.FC<ProveTabProps> = ({
 
   const hasNext = !!(data?.next?.date);
   const nextDateObj = hasNext ? safeParseLocal(data!.next.date) : null;
-  const roomObj = hasNext ? data?.customRooms.find(r => r.id === data.next.room) : null;
+  const roomObj = hasNext ? data?.customRooms?.find(r => r.id === data.next.room) : null;
   const isSharedExpense = !!data?.next?.sharedExpense || 
     (data?.next?.sharedExpense as any) === 'true' || 
     (data?.next?.sharedExpense as any) === 'TRUE' || 

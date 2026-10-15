@@ -25,9 +25,13 @@ export const CalendarExportModal: React.FC<CalendarExportModalProps> = ({ item, 
   useEffect(() => {
     setIsAndroid(isAndroidDevice());
     setIsApple(isAppleDevice());
-    const stored = localStorage.getItem('gd_direct_calendar_app');
-    if (stored === 'true') {
-      setDirectAppPref(true);
+    try {
+      const stored = localStorage.getItem('gd_direct_calendar_app');
+      if (stored === 'true') {
+        setDirectAppPref(true);
+      }
+    } catch (e) {
+      console.warn('Could not read calendar app preference', e);
     }
   }, []);
 
@@ -43,7 +47,11 @@ export const CalendarExportModal: React.FC<CalendarExportModalProps> = ({ item, 
 
   const toggleDirectPref = (checked: boolean) => {
     setDirectAppPref(checked);
-    localStorage.setItem('gd_direct_calendar_app', checked ? 'true' : 'false');
+    try {
+      localStorage.setItem('gd_direct_calendar_app', checked ? 'true' : 'false');
+    } catch (e) {
+      console.warn('Could not save calendar app preference', e);
+    }
   };
 
   const handleGoogleCalendarAction = (e: React.MouseEvent) => {

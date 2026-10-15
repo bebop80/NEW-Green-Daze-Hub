@@ -154,7 +154,7 @@ export const PagamentiTab: React.FC<PagamentiTabProps> = ({
                 <option value="" className="bg-white dark:bg-[#121620] text-slate-400 dark:text-zinc-400">
                   Seleziona pagatore...
                 </option>
-                {data?.members.map((m) => (
+                {(data?.members || []).map((m) => (
                   <option 
                     key={m.name} 
                     value={m.name} 
