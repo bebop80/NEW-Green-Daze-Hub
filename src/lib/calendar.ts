@@ -21,6 +21,15 @@ export function isAppleDevice(): boolean {
   return /iPhone|iPad|iPod|Macintosh/i.test(navigator.userAgent);
 }
 
+export function isMobileOrTablet(): boolean {
+  if (typeof navigator === 'undefined') return false;
+  const ua = navigator.userAgent || '';
+  const isAndroid = /Android/i.test(ua);
+  const isIOS = /iPhone|iPad|iPod/i.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const isOtherMobile = /Mobile|Tablet|Silk|Kindle/i.test(ua);
+  return isAndroid || isIOS || isOtherMobile;
+}
+
 export function getCalendarExportDetails(item: CalendarEventItem) {
   const dateObj = safeParseLocal(item.date);
   const year = dateObj.getFullYear();
@@ -66,21 +75,20 @@ export function getCalendarExportDetails(item: CalendarEventItem) {
   const encDetails = encodeURIComponent(item.description || item.subtitle || '');
   const encLocation = encodeURIComponent(item.location || '');
 
-  // Web Google Calendar URL (Priority 2 / Desktop)
+  // Web Google Calendar URL (Universal browser fallback)
   const googleWebUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encTitle}&details=${encDetails}&location=${encLocation}&dates=${startStr}/${endStr}`;
 
-  // Android Native Google Calendar Intent (Priority 1 for Android)
-  // Action: android.intent.action.INSERT
-  // Type: vnd.android.cursor.dir/event
-  // Package: com.google.android.calendar
-  // Fallback: S.browser_fallback_url (points to Google Calendar Web if app is not installed)
-  const androidIntentUrl = `intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/event;package=com.google.android.calendar;S.title=${encTitle};S.description=${encDetails};S.eventLocation=${encLocation};l.beginTime=${startMillis};l.endTime=${endMillis};S.browser_fallback_url=${encodeURIComponent(googleWebUrl)};end;`;
+  // Android Native Calendar Intent (Opens whichever calendar app is installed on the phone/tablet)
+  // We explicitly DO NOT hardcode package=com.google.android.calendar so Android can launch Samsung Calendar,
+  // Google Calendar, Xiaomi Calendar, etc.
+  // If no calendar app exists, S.browser_fallback_url redirects automatically to Google Calendar Web.
+  const androidIntentUrl = `intent:#Intent;action=android.intent.action.INSERT;type=vnd.android.cursor.dir/event;S.title=${encTitle};S.description=${encDetails};S.eventLocation=${encLocation};l.beginTime=${startMillis};l.endTime=${endMillis};S.browser_fallback_url=${encodeURIComponent(googleWebUrl)};end;`;
 
   // Generic ICS Content for Apple / other native calendars
   const icsContent = [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//BandApp//Calendar//IT',
+    'PRODID:-//GreenDaze//Calendar//IT',
     'CALSCALE:GREGORIAN',
     'METHOD:PUBLISH',
     'BEGIN:VEVENT',
@@ -105,27 +113,42 @@ export function getCalendarExportDetails(item: CalendarEventItem) {
     endMillis,
     googleWebUrl,
     androidIntentUrl,
+    nativeAndroidIntentUrl: androidIntentUrl,
     icsUrl,
     fileName
   };
 }
 
-export function openGoogleCalendarPriority(item: CalendarEventItem, onDone?: () => void) {
-  const { googleWebUrl, androidIntentUrl } = getCalendarExportDetails(item);
+export function openNativeCalendarPriority(item: CalendarEventItem, onDone?: () => void) {
+  const { googleWebUrl, androidIntentUrl, icsUrl, fileName } = getCalendarExportDetails(item);
   const isAndroid = isAndroidDevice();
+  const isApple = isAppleDevice();
 
   if (isAndroid) {
-    // Priority 1: Launch Android Google Calendar native app via Intent URI
+    // 1. First, attempt to open the native calendar app installed on the device
+    let appLaunched = false;
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        appLaunched = true;
+      }
+    };
+    document.addEventListener('visibilitychange', onVisibilityChange, { once: true });
+
     const start = Date.now();
     try {
       window.location.href = androidIntentUrl;
-    } catch (e) {
+    } catch {
+      // If intent fails immediately, fallback to Google Calendar Web
       window.open(googleWebUrl, '_blank', 'noopener,noreferrer');
+      if (onDone) onDone();
+      return;
     }
 
-    // Priority 2 Fallback: if after 1500ms browser is still visible and focused, open web version
+    // 2. Fallback: If after 1500ms the browser is still visible and focused,
+    // no native calendar app caught the intent; redirect to Google Calendar Web.
     setTimeout(() => {
-      if (typeof document !== 'undefined' && document.visibilityState === 'visible' && (Date.now() - start < 2500)) {
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+      if (!appLaunched && typeof document !== 'undefined' && document.visibilityState === 'visible' && (Date.now() - start < 2500)) {
         window.open(googleWebUrl, '_blank', 'noopener,noreferrer');
       }
     }, 1500);
@@ -133,23 +156,39 @@ export function openGoogleCalendarPriority(item: CalendarEventItem, onDone?: () 
     if (onDone) {
       setTimeout(onDone, 600);
     }
+  } else if (isApple) {
+    // On iPhone / iPad / Mac, open native Calendar via .ics download/sheet
+    try {
+      const link = document.createElement('a');
+      link.href = icsUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch {
+      window.open(googleWebUrl, '_blank', 'noopener,noreferrer');
+    }
+    if (onDone) onDone();
   } else {
-    // Desktop / iOS: Open Google Calendar Web
+    // Desktop / other: open Google Calendar Web
     window.open(googleWebUrl, '_blank', 'noopener,noreferrer');
     if (onDone) onDone();
   }
 }
 
+// Backward-compatible alias
+export const openGoogleCalendarPriority = openNativeCalendarPriority;
+
 export function handleCalendarExport(item: CalendarEventItem, onOpenModal: (item: CalendarEventItem) => void) {
   let direct = false;
   try {
-    direct = isAndroidDevice() && typeof localStorage !== 'undefined' && localStorage.getItem('gd_direct_calendar_app') === 'true';
+    direct = isMobileOrTablet() && typeof localStorage !== 'undefined' && localStorage.getItem('gd_direct_calendar_app') === 'true';
   } catch {
     direct = false;
   }
 
   if (direct) {
-    openGoogleCalendarPriority(item);
+    openNativeCalendarPriority(item);
   } else {
     onOpenModal(item);
   }
