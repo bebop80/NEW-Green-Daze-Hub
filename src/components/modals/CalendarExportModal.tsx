@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { Calendar, MapPin, X, ExternalLink, Download, Globe } from 'lucide-react';
+import React from 'react';
+import { Calendar, MapPin, X } from 'lucide-react';
 import { format } from 'date-fns';
 import { it } from 'date-fns/locale';
 import { 
   CalendarEventItem, 
-  getCalendarExportDetails, 
-  openNativeCalendarPriority, 
-  isAndroidDevice, 
-  isAppleDevice,
-  isMobileOrTablet 
+  getCalendarExportDetails 
 } from '../../lib/calendar';
 
 export type { CalendarEventItem };
@@ -19,46 +15,33 @@ interface CalendarExportModalProps {
 }
 
 export const CalendarExportModal: React.FC<CalendarExportModalProps> = ({ item, onClose }) => {
-  const [directAppPref, setDirectAppPref] = useState(false);
-  const [isMobile, setIsMobile] = useState(false);
-  const [isAndroid, setIsAndroid] = useState(false);
-  const [isApple, setIsApple] = useState(false);
-
-  useEffect(() => {
-    setIsMobile(isMobileOrTablet());
-    setIsAndroid(isAndroidDevice());
-    setIsApple(isAppleDevice());
-    try {
-      const stored = localStorage.getItem('gd_direct_calendar_app');
-      if (stored === 'true') {
-        setDirectAppPref(true);
-      }
-    } catch (e) {
-      console.warn('Could not read calendar app preference', e);
-    }
-  }, []);
-
   if (!item) return null;
 
   const {
     dateObj,
     googleWebUrl,
     icsUrl,
-    fileName
+    fileName,
+    icsContent
   } = getCalendarExportDetails(item);
 
-  const toggleDirectPref = (checked: boolean) => {
-    setDirectAppPref(checked);
+  const handleIcsClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    // Attempt modern Blob download first for maximal compatibility, fallback to data URI
     try {
-      localStorage.setItem('gd_direct_calendar_app', checked ? 'true' : 'false');
-    } catch (e) {
-      console.warn('Could not save calendar app preference', e);
+      const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
+      const blobUrl = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.setAttribute('download', fileName);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      setTimeout(() => URL.revokeObjectURL(blobUrl), 2000);
+      e.preventDefault();
+    } catch {
+      // Allow default <a> href with data: URI to proceed
     }
-  };
-
-  const handleNativeAction = (e: React.MouseEvent) => {
-    e.preventDefault();
-    openNativeCalendarPriority(item, onClose);
+    onClose();
   };
 
   return (
@@ -104,78 +87,45 @@ export const CalendarExportModal: React.FC<CalendarExportModalProps> = ({ item, 
           )}
         </div>
 
-        {/* Calendar Action Options */}
-        <div className="space-y-2.5 pt-0.5">
-          {/* Main Option: Native Calendar App with Fallback to Google Calendar */}
-          <div className="space-y-1.5">
-            <button
-              type="button"
-              onClick={handleNativeAction}
-              className="w-full flex items-center gap-3 p-3.5 rounded-xl border transition-all group cursor-pointer bg-emerald-950/30 hover:bg-emerald-900/40 border-emerald-500/60 hover:border-emerald-400 shadow-md shadow-emerald-950/30 ring-1 ring-emerald-500/20 text-left"
-            >
-              <span className="text-2xl shrink-0">📅</span>
-              <div className="flex flex-col flex-1 min-w-0">
-                <span className="font-semibold text-white group-hover:text-brand-green transition-colors text-sm">
-                  {isMobile ? 'App Calendario' : 'Aggiungi al Calendario'}
-                </span>
-                <span className="text-[11px] text-zinc-400 leading-snug mt-0.5">
-                  {isMobile 
-                    ? "Apre l'app calendario del dispositivo (o Google Calendar se non presente)" 
-                    : 'Apre il calendario predefinito o Google Calendar'}
-                </span>
-              </div>
-            </button>
-
-            {/* Direct Google Calendar Web link */}
-            <a
-              href={googleWebUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={onClose}
-              className="w-full flex items-center justify-center gap-1.5 py-1.5 px-2 text-[11px] text-zinc-400 hover:text-zinc-200 transition-colors cursor-pointer"
-            >
-              <Globe size={12} className="text-zinc-500" />
-              <span>Oppure apri versione Google Calendar Web</span>
-              <ExternalLink size={10} className="text-zinc-500" />
-            </a>
-          </div>
-
-          {/* Option 2: Apple Calendar / Generic .ics */}
+        {/* Calendar Action Options - faithfully matching the original GreenDazeHub project */}
+        <div className="space-y-2.5 pt-1">
+          {/* Option 1: Native Phone / Apple Calendar (.ics) - opens native calendar app on phone/tablet */}
           <a
             href={icsUrl}
             download={fileName}
+            onClick={handleIcsClick}
+            className="w-full flex items-center gap-3 p-3.5 bg-[#222226] hover:bg-brand-green/20 border border-zinc-700 hover:border-brand-green/60 rounded-xl text-white font-medium text-sm transition-all group text-left cursor-pointer"
+          >
+            <span className="text-2xl shrink-0">🍏</span>
+            <div className="flex flex-col flex-1 min-w-0">
+              <span className="font-semibold text-white group-hover:text-brand-green transition-colors text-sm">
+                Apple / Calendario Nativo (.ics)
+              </span>
+              <span className="text-[11px] text-zinc-400 leading-snug mt-0.5">
+                Scarica ed apri nell'app calendario
+              </span>
+            </div>
+          </a>
+
+          {/* Option 2: Google Calendar */}
+          <a
+            href={googleWebUrl}
+            target="_blank"
+            rel="noopener noreferrer"
             onClick={onClose}
             className="w-full flex items-center gap-3 p-3.5 bg-[#222226] hover:bg-brand-green/20 border border-zinc-700 hover:border-brand-green/60 rounded-xl text-white font-medium text-sm transition-all group text-left cursor-pointer"
           >
-            <span className="text-2xl shrink-0">📥</span>
+            <span className="text-2xl shrink-0">📅</span>
             <div className="flex flex-col flex-1 min-w-0">
               <span className="font-semibold text-white group-hover:text-brand-green transition-colors text-sm">
-                File Calendario (.ics)
+                Google Calendar
               </span>
               <span className="text-[11px] text-zinc-400 leading-snug mt-0.5">
-                Scarica file compatibile con tutti i calendari
+                Apri web o app Google Calendar
               </span>
             </div>
-            <Download size={15} className="text-zinc-500 group-hover:text-brand-green shrink-0" />
           </a>
         </div>
-
-        {/* Mobile Instant 1-Touch Preference */}
-        {isMobile && (
-          <div className="pt-2 border-t border-zinc-800/80">
-            <label className="flex items-center gap-2 cursor-pointer group">
-              <input 
-                type="checkbox"
-                checked={directAppPref}
-                onChange={(e) => toggleDirectPref(e.target.checked)}
-                className="rounded border-zinc-700 bg-zinc-900 text-brand-green focus:ring-brand-green/30 cursor-pointer w-3.5 h-3.5"
-              />
-              <span className="text-[11px] text-zinc-400 group-hover:text-zinc-300 transition-colors">
-                Apri direttamente l'app al tocco dei tasti Calendario
-              </span>
-            </label>
-          </div>
-        )}
       </div>
     </div>
   );
